@@ -1,0 +1,208 @@
+\documentclass{scrartcl}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage{stmaryrd}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{algorithm2e}
+\usepackage{hyperref}
+\usepackage[french]{babel}
+\usepackage{color}
+\usepackage{tikz}
+\usetikzlibrary{automata, arrows.meta, positioning}
+\usepackage{Macros}
+
+\SetKwProg{Fun}{Function}{ is}{end}
+
+\title{Rapport : Transducteurs et machines de Moore et Mealy}
+
+\begin{document}
+
+\maketitle
+
+\RestyleAlgo{ruled}
+
+\begin{flushleft}
+
+\tableofcontents
+
+\section{Généralités sur les transducteurs finis}
+
+Un transducteur fini est une généralisation des automates finis, implémentant non pas des langages mais plutôt des
+relations entre des ensembles de mots. Cela se fait à l'aide d'étiquettes supplémentaires sur chaque transition
+entre deux états.
+
+\subsection{Définition des transducteurs}
+
+\begin{define}
+    Un transducteur fini est un 6-uplet $T = (\Sigma, \Gamma, Q, I, F, \delta)$ où
+    \begin{itemize}
+        \item $\Sigma$ est l'alphabet d'entrée (fini)\\
+        \item $\Gamma$ l'alphabet de sortie (fini)\\
+        \item $Q$ l'ensemble des états (fini)\\
+        \item $I \subset Q$ l'ensemble des états initiaux
+        \item $F \subset Q$ l'ensemble des états finaux
+        \item $\delta : Q \times \Sigma_{\varepsilon} \times \Gamma_{\varepsilon} \longrightarrow \mathcal{P}(Q)$ est
+        la fonction de transition non déterministe
+    \end{itemize}
+\end{define}
+
+On peut comme pour les automates définir
+$\delta^* : Q \times \Sigma^* \times \Gamma^* \longrightarrow \mathcal{P}(Q)$ par induction :
+\begin{equation*}
+    \begin{split}
+        \delta^*_{\mid Q \times \Sigma_{\varepsilon} \times \Gamma_{\varepsilon}} &= \delta\\
+        \forall (a, b) \in \Sigma_{\varepsilon} \times \Gamma_{\varepsilon},
+        \forall (w, v) \in \Sigma^* \times \Gamma^*, &\forall q \in Q, \delta^*(q, wa, vb) = 
+        \bigcup_{p \in \delta^*(q, w, v)} \delta(p, a, b)
+    \end{split}
+\end{equation*}
+
+On définit ici la relation reconnue par un transducteur fini, de manière similaire que les
+langages reconnus par les automates.
+\begin{define}
+    On défini $[T]$ la relation reconnue par un transducteur fini $T$, définie comme suit :
+    \[ \forall (u, v) \in \Sigma^* \times \Gamma^*, u[T]v \Leftrightarrow \exists q \in I, \exists r \in F,
+    r \in \delta^*(q, u, v) \]
+\end{define}
+
+\begin{figure}[h]
+    \caption{Un exemple de transducteur fini reconaissant la relation de congruence modulo 2}
+    \begin{center}
+    Ici $\Sigma = \Gamma = \{0, 1\}$ et les transitions sont étiquettées par lettre d'entrée, lettre de sortie\\
+    \vspace*{0.5cm}
+    \begin{tikzpicture}[auto]
+        \node (q0) [state, initial, initial text= ] {$q_0$};
+        \node (q2) [state, below right = of q0] {$q_2$};
+        \node (q1) [state, accepting, above right = of q2] {$q_1$};
+
+        \path [-stealth, thick]
+        (q0) edge [loop above] node {$\Sigma_{\varepsilon} \mid \Sigma_{\varepsilon}$} (q0)
+        (q0) edge node {$\substack{0 \mid 0 \\ 1 \mid 1}$} (q1)
+        (q0) edge [bend right] node {$\substack{0 \mid 1 \\ 1 \mid 0}$} (q2)
+        (q1) edge [bend left] node {$\Sigma_{\varepsilon} \mid \Sigma_{\varepsilon}$} (q2)
+        (q2) edge [loop below] node {$\Sigma_{\varepsilon} \mid \Sigma_{\varepsilon}$} (q2);
+    \end{tikzpicture}
+    \end{center}
+\end{figure}
+
+\vspace*{2cm}
+
+\subsection{Relations rationnelles}
+
+Soient $\Sigma$ et $\Gamma$ des alphabets finis. Nous allons ici étudier une classe particulière
+de relations entre $\Sigma^*$ et $\Gamma^*$, que l'on peut voir comme des parties de $\Sigma^* \times \Gamma^*$,
+les relations rationelles. Généralisons pour cela les opérations usuelles sur les langages 
+
+\begin{define}
+    Soient $R, R' \subset \Sigma^* \times \Gamma^*$ des relations. On pose
+    \begin{itemize}
+        \item $R \cdot R' = \{ (xx', yy') \mid (x, y) \in R, (x', y') \in R' \}$, la concaténation ou produit
+        \item $\displaystyle R^* = \bigcup_{n \geq 0} R^n$ où $R^n$ est la concaténation répétée, et $R^0 =
+        \{ (\varepsilon, \varepsilon) \}$
+    \end{itemize}
+\end{define}
+
+\begin{define}
+    L'ensemble des relations rationelles est défini comme le plus petit ensemble de langages stable par étoile,
+    concaténation et union, et contenant $\varnothing$ et les singletons.
+\end{define}
+
+Pour être plus général, une relation rationelle est une partie rationnelle du monoïde produit
+$\Sigma^* \times \Gamma^*$.\\
+Comme pour les automates on a bien équivalence entre les relations reconnues par des transducteurs finis
+et les relations rationelles, ce qui est le sujet de la prochaine section
+
+\subsection{Equivalence entre transducteurs finis et relations rationelles}
+
+\begin{theorem}
+    Une relation $R$ est rationelle si et seulement si elle est reconnue par un transducteur fini $T$
+\end{theorem}
+
+\begin{proof}
+    La preuve est exactement du même acabi que celle pour les automates finis et langages rationnels
+\end{proof}
+
+Cette équivalence permet de voir plus simplement certaines propriétés des transducteurs finis ou des relations
+rationnelles. On obtient par exemple toutes les propriétés de clôture des automates finis en considérant un
+transducteur comme un automate sur l'alphabet $\Sigma \times \Gamma$. Il est plus simple d'obtenir
+la stabilité par composition et inverse par la vision en tant que relation.
+\\~\\
+Ajouter la preuve de composition qd mm, à trouver dans le livre de Sakarovitch + propriété des projections
+et transformation des réguliers en régulier
+
+\section{Machines de Moore}
+
+Une machine de Moore est un cas particulier d'un transducteur fini : d'abord une telle machine est déterministe
+et implémente donc non pas une relation rationelle mais une fonction, qui sera appelée rationelle. La contrainte
+supplémentaire sur ces machines est que la lettre de sortie lue ne dépend que de l'état actuel de l'automate.
+
+\subsection{Définition et exemple}
+
+On peut évidemment définir une machine de Moore en partant de la définition de transducteur et en posant des
+contraintes sur la fonction de transition. Il est toutefois plus commode de la définir ainsi
+
+\begin{define}
+    Une machine de Moore $\mathcal{M}$ est un $7$-uplet $(\Sigma, \Gamma, Q, q_0, F, \delta, \lambda)$ où
+    \begin{itemize}
+        \item $\Sigma$ est l'alphabet d'entrée
+        \item $\Gamma$ l'alphabet de sortie
+        \item $Q$ l'ensemble fini des états
+        \item $q_0$ l'état initial
+        \item $F \subset Q$ les états finaux
+        \item $\delta : Q \times \Sigma \rightarrow Q$ la fonction de transition déterministe
+        \item $\lambda : Q \rightarrow \Gamma$ la fonction de sortie
+    \end{itemize}
+\end{define}
+
+Un calcul de $\mathcal{M}$ sur un mot $w$ est défini de la même manière que pour un automate déterministe. On ajoute
+toutefois la notion de mot produit par ce calcul, qui est le mot obtenu en concaténant les lettres obtenues
+par application de $\lambda$ sur chaque état pris lors du calcul de $\mathcal{M}$ sur $w$. Plus formellement
+
+\begin{define}
+    On définit pour $q \in Q$ et $w \in \Sigma^*$ $q \star w$ récursivement :
+    \[ \forall a \in \Sigma, q \star a = \lambda(\delta(q, a)) \text{ et } \forall u \in \Sigma^*,
+    q \star ua = (q \star u)(\delta^*(q, u) \star a) \]
+    Le mot produit par le calcul de $\mathcal{M}$ sur $w$ est défini comme $q_0 \star w$. Notons $L \subset \Sigma^*$
+    le langage reconnu par l'automate déterministe contenu dans la définition de $\mathcal{M}$. La fonction rationelle
+    réalisée par $\mathcal{M}$ est alors définie par
+    \[ f : \begin{array}{cl}
+        L &\longrightarrow \Gamma^*\\
+        w &\longmapsto q_0 \star w
+    \end{array} \]
+\end{define}
+
+On peut généraliser la fonction réalisée par $\mathcal{M}$ en la définissant non pas sur $L$ mais sur tout
+$\Sigma^*$. Cela revient à rendre tout les états acceptants (ça reste une fonction rationelle ???)
+
+\begin{figure}[h]
+    \caption{Un exemple de machine de Moore implémentant le xor chiffre à chiffre entre deux entiers en binaires}
+    \begin{center}
+        Si l'on souhaite faire le xor de $101$ et $100$, on donne à notre machine l'entrée
+        $110010$ et cette dernière renvoie $000001$ (un 0 puis le résultat du xor pour chaque chiffre).
+        On ne précise $\lambda(q_0)$ car cette valeur n'est pas utilisée pour définir la fonction de cette machine\\
+        \vspace*{0.5cm}
+        \begin{tikzpicture}[auto, node distance = 1.5cm]
+            \node (q0) [state, initial, initial text= ] {$q_0$};
+            \node (q1) [state with output, above right = of q0] {$q_1$ \nodepart{lower} $0$};
+            \node (q2) [state with output, below right = of q0] {$q_2$ \nodepart{lower} $0$};
+            \node (q3) [state with output, right = of q1] {$q_3$ \nodepart{lower} $1$};
+            \node (q4) [state with output, right = of q2] {$q_4$ \nodepart{lower} $0$};
+
+            \path [-stealth, thick]
+            (q0) edge node {$1$} (q1)
+            (q0) edge node {$0$} (q2)
+            (q1) edge [bend left] node {$0$} (q3)
+            (q1) edge [bend left] node {$1$} (q4)
+            (q2) edge node {$0$} (q4)
+            (q2) edge [bend left] node {$1$} (q3)
+            (q3) edge [bend left] node {$0$} (q2)
+            (q3) edge node {$1$} (q1)
+            (q4) edge [bend left] node {$0$} (q2)
+            (q4) edge [bend left] node {$1$} (q1);
+        \end{tikzpicture}
+    \end{center}
+\end{figure}
+
+\end{flushleft}
+\end{document}
