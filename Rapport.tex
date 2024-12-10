@@ -47,6 +47,8 @@ entre deux états.
     \end{itemize}
 \end{define}
 
+En d'autres termes, $T$ est un automate fini non déterministe sur l'alphabet $\Sigma_{\varepsilon} \times \Gamma \cup \Sigma \times \Gamma_{\varepsilon}$
+\\~\\
 On peut comme pour les automates définir
 $\delta^* : Q \times \Sigma^* \times \Gamma^* \longrightarrow \mathcal{P}(Q)$ par induction :
 \begin{equation*}
@@ -124,12 +126,29 @@ et les relations rationelles, ce qui est le sujet de la prochaine section
 \end{proof}
 
 Cette équivalence permet de voir plus simplement certaines propriétés des transducteurs finis ou des relations
-rationnelles. On obtient par exemple toutes les propriétés de clôture des automates finis en considérant un
-transducteur comme un automate sur l'alphabet $\Sigma \times \Gamma$. Il est plus simple d'obtenir
-la stabilité par composition et inverse par la vision en tant que relation.
-\\~\\
+rationnelles.
+\begin{prop}
+    Les relations rationnelles sont stables par intersection, complémentaire et inverse. De plus les projections d'une relation
+    rationelle sont des langages rationnels.
+\end{prop}
+
+\begin{proof}
+    On obtient la clôture par intersection et complémentaire en exploitant les propriétés de clôture des automates finis.\\
+    Pour les autres : si $R$ est une relation rationelle sur $\Sigma^* \times \Gamma^*$, on note $R^{-1}$ la relation inverse et
+    \[ R_{\Sigma} = \{ w \in \Sigma^* \mid \exists u \in \Gamma^*, (w, u) \in R \} \]
+    et de même manière $R_{\Gamma}$. Soit $T$ un transducteur fini reconaissant $R$.\\
+    Si l'on considère le transducteur où les étiquettes d'entrée et de sorties sont inversées, ce dernier reconnait bien la
+    relation $R^{-1}$.\\
+    Si l'on considère l'automate obtenu en ne gardant que les étiquettes d'entrée sur les transitions, cet automate reconnait bien $R_{\Sigma}$.
+    On procède de même manière pour $R_{\Gamma}$
+\end{proof}
+
 Ajouter la preuve de composition qd mm, à trouver dans le livre de Sakarovitch + propriété des projections
 et transformation des réguliers en régulier
+
+\subsection{Quelques problèmes associés aux transducteurs finis}
+
+Déterminer si un transducteur est fonctionnel, si deux transducteurs implémentent la même relation
 
 \section{Machines de Moore}
 
@@ -203,6 +222,14 @@ $\Sigma^*$. Cela revient à rendre tout les états acceptants (ça reste une fon
         \end{tikzpicture}
     \end{center}
 \end{figure}
+
+\section{Machines de Mealy}
+
+\subsection{Définiton}
+
+\subsection{Equivalence avec Moore}
+
+\subsection{Propriétés algébriques}
 
 \end{flushleft}
 \end{document}
