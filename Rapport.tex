@@ -113,42 +113,77 @@ les relations rationelles. Généralisons pour cela les opérations usuelles sur
 Pour être plus général, une relation rationelle est une partie rationnelle du monoïde produit
 $\Sigma^* \times \Gamma^*$.\\
 Comme pour les automates on a bien équivalence entre les relations reconnues par des transducteurs finis
-et les relations rationelles, ce qui est le sujet de la prochaine section
+et les relations rationelles.
 
-\subsection{Equivalence entre transducteurs finis et relations rationelles}
+\subsection{Propriétés des relations rationnelles et transducteurs finis}
+
+De manière analogue au cas des automates finis et des langages rationnels, on dispose du théorème suivant reliant
+les transducteurs finis aux relations rationelles
 
 \begin{theorem}
     Une relation $R$ est rationelle si et seulement si elle est reconnue par un transducteur fini $T$
 \end{theorem}
 
 \begin{proof}
-    La preuve est exactement du même acabi que celle pour les automates finis et langages rationnels
+    La preuve est exactement du même acabi que celle pour les automates finis et langages rationnels.
 \end{proof}
 
-Cette équivalence permet de voir plus simplement certaines propriétés des transducteurs finis ou des relations
+Cette équivalence permet de voir plus simplement certaines propriété de stabilité des transducteurs finis ou des relations
 rationnelles.
-\begin{prop}
-    Les relations rationnelles sont stables par intersection, complémentaire et inverse. De plus les projections d'une relation
+\begin{prop} \label{stabRat}
+    Les relations rationnelles sont stables par inverse. De plus les projections d'une relation
     rationelle sont des langages rationnels.
 \end{prop}
 
 \begin{proof}
-    On obtient la clôture par intersection et complémentaire en exploitant les propriétés de clôture des automates finis.\\
-    Pour les autres : si $R$ est une relation rationelle sur $\Sigma^* \times \Gamma^*$, on note $R^{-1}$ la relation inverse et
+    Si $R$ est une relation rationelle sur $\Sigma^* \times \Gamma^*$, on note $R^{-1}$ la relation inverse et
     \[ R_{\Sigma} = \{ w \in \Sigma^* \mid \exists u \in \Gamma^*, (w, u) \in R \} \]
-    et de même manière $R_{\Gamma}$. Soit $T$ un transducteur fini reconaissant $R$.\\
+    et de même manière $R_{\Gamma}$, les projections à droite et à gauche de $R$. Soit $T$ un transducteur fini reconaissant $R$.\\
     Si l'on considère le transducteur où les étiquettes d'entrée et de sorties sont inversées, ce dernier reconnait bien la
     relation $R^{-1}$.\\
     Si l'on considère l'automate obtenu en ne gardant que les étiquettes d'entrée sur les transitions, cet automate reconnait bien $R_{\Sigma}$.
     On procède de même manière pour $R_{\Gamma}$
 \end{proof}
 
-Ajouter la preuve de composition qd mm, à trouver dans le livre de Sakarovitch + propriété des projections
-et transformation des réguliers en régulier
+\begin{prop} \label{imageRat}
+    Soit $L \subset \Sigma^*$ rationnel. L'image par $R$ une relation rationnelle de $L$ est également régulière
+\end{prop}
+
+\begin{proof}
+    Soit $\mathcal{A} = (\Sigma, Q_L, I_L, F_L, \delta_L)$ un automate reconaissant $L$. On en fait un transducteur
+    $T_L = (\Sigma, \Gamma, Q_L, I_L, F_L, \delta'_L)$ où
+    \[ \forall q \in Q_L, \forall a \in \Sigma, \forall b \in \Gamma_{\varepsilon}, \delta'_L(q, a, b) = \delta_L(q, a) \]
+    (cela revient à coller $\Gamma_{\varepsilon}$ en étiquette de sortie de chaque transition de $\mathcal{A}$). Si on considère
+    maintenant $T_R$ un transducteur fini reconaissant $R$, et que l'on considère le transducteur produit de $T_R$ et $T_L$,
+    ayant pour états finaux les produits des états finaux, ce dernier reconait la relation
+    \[ R' = \{ (u, v) \in R \mid u \in L \} \]
+    En considérant la projection à droite, on obtient alors le langage $R(L) = \{ v \in \Gamma^* \mid \exists u \in L, (u, v) \in R \}$
+    qui est bien l'image de $L$ par $R$. Donc par la propriété \ref{stabRat}, $R(L)$ est rationel
+\end{proof}
+
+Un exemple d'application de ces propriétés de stabilité est une preuve rapide de la rationnalité de $\operatorname*{Pref}(L)$, l'ensemble des préfixes
+d'un langage rationnel $L$ : la relation $\operatorname*{Pref}$ sur $\Sigma^* \times \Sigma^*$ qui met en relation $w$ avec l'ensemble de
+ses préfixes est rationnelle, reconnue par le transducteur figure \ref{transPref}. Par la propriété \ref{imageRat}, on obtient immédiatement la rationnalité de 
+$\operatorname*{Pref}(L)$
+
+\begin{figure}[h]
+    \caption{L'automate reconaissant la relation $\operatorname*{Pref}$ avec $\Sigma = \{a_1, ..., a_n\}$} \label{transPref}
+    \begin{center}
+    \begin{tikzpicture}[auto]
+        \node (q0) [state, initial, initial text= ] {$q_0$};
+        \node (q1) [state, accepting, right=of q0] {$q_1$};
+
+        \path[-stealth, thick]
+        (q0) edge [loop above] node {$\substack{a_1 \mid a_1 \\ ... \\ a_n \mid a_n}$} (q0)
+        (q0) edge node {$\varepsilon \mid \varepsilon$} (q1)
+        (q1) edge [loop above] node {$\Sigma \mid \varepsilon$} (q1);
+    \end{tikzpicture}
+    \end{center}
+\end{figure}
 
 \subsection{Quelques problèmes associés aux transducteurs finis}
 
-Déterminer si un transducteur est fonctionnel, si deux transducteurs implémentent la même relation
+(Déterminer si un transducteur est fonctionnel, si deux transducteurs implémentent la même relation)
 
 \section{Machines de Moore}
 
@@ -192,7 +227,7 @@ par application de $\lambda$ sur chaque état pris lors du calcul de $\mathcal{M
 \end{define}
 
 On peut généraliser la fonction réalisée par $\mathcal{M}$ en la définissant non pas sur $L$ mais sur tout
-$\Sigma^*$. Cela revient à rendre tout les états acceptants (ça reste une fonction rationelle ???)
+$\Sigma^*$. Cela revient à rendre tout les états acceptants
 
 \begin{figure}[h]
     \caption{Un exemple de machine de Moore implémentant le xor chiffre à chiffre entre deux entiers en binaires}
@@ -226,6 +261,14 @@ $\Sigma^*$. Cela revient à rendre tout les états acceptants (ça reste une fon
 \section{Machines de Mealy}
 
 \subsection{Définiton}
+
+Une machine de Mealy est également un cas particulier de transducteur fini, moins restrictive à première vue que les machines de Moore.
+Il s'agit d'un transducteur déterministe sans $\varepsilon$-transition.
+\\~\\
+Du point de vue du formalisme, elles sont définies de la même manière qu'un automate de Moore, à l'exception de la fonction de sortie
+$\lambda$ qui est cette fois $\lambda : Q \times \Sigma \rightarrow \Gamma$. La fonction rationelle réalisée par une machine de Mealy
+est définie de manière très similaire à celle pour les machines de Moore (il suffit juste de tenir comptre de la lettre de $\Sigma$ lue à chaque
+étape du calcul)
 
 \subsection{Equivalence avec Moore}
 
