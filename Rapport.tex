@@ -143,21 +143,6 @@ rationnelles.
     relation $R^{-1}$.\\
     Si l'on considère l'automate obtenu en ne gardant que les étiquettes d'entrée sur les transitions, cet automate reconnait bien $R_{\Sigma}$.
     On procède de même manière pour $R_{\Gamma}$.\\
-    Enfin, pour les projections $R_L  = \{ y \in \Gamma^* | \exists x, (x, y) \in R, x \in L \}$ où $L$ est rationnel, la relation $L \times \Gamma^*$ est rationnelle, donc l'instersection projetée à droite l'est aussi.
-\end{proof}
-
-\begin{prop}[Composition de relations rationnelles]
-    La composition de deux relations rationnelles est rationnelle.
-\end{prop}
-
-\begin{proof}
-    Si $(Q_1, \Sigma, \Gamma, I_1, F_1, \delta_1)$ et $(Q_2, \Gamma, \Lambda, I_2, F_2, \delta_2)$ sont des transducteurs implémentant ces deux relations,
-    on construit un automate  $(Q_1 \times Q_2, \Sigma, \Gamma \times \Lambda, I_1 \times I_2, F_1 \times F_2, \delta_3)$ avec les transitions
-    $((q_1, q_2), \epsilon, (\epsilon, l), (q_1, q_2'))$ pour chaque transition $(q_2, \epsilon , l, q_2')$ avec $l \in \Lambda_\epsilon$, les $((q_1, q_2), l, (m, n), (q_1', q_2'))$ pour chaque transition $(q_1, l, m, q_1')$ du premier transducteur et $(q_2, m, n, q_2')$ du deuxième, avec $l \in \Sigma_\epsilon, m \in \Gamma, n \in \Lambda_\epsilon$, et enfin les $((q_1, q_2), l, (\epsilon, \epsilon), (q_1', q_2))$ pour chaque transition $(q_1, l, \epsilon, q_1'), l \in \Sigma$.\\
-    En effet, si on regarde uniquement le premier élément du couple des états et de la sortie, on retrouve exactement le premier transducteur.
-    Si on regarde uniquement les deuxièmes éléments des couples des états, on trouve le deuxième transducteur, qui lit chaque lettre du premier élément
-    du couple de sortie au moment de la transition étiquetée en sortie par cette lettre.\\
-    Cet automate implémente donc la relation ternaire qui contient $(u, v, w)$ si et seulement si $(u, v)$ est dans la première relation, et $(v, w)$ dans la deuxième. En ayant seulement le deuxième élément du couple en sortie, on a bien la composition des deux relations.
 \end{proof}
 
 \begin{prop} \label{imageRat}
@@ -173,13 +158,45 @@ rationnelles.
     ayant pour états finaux les produits des états finaux, ce dernier reconait la relation
     \[ R' = \{ (u, v) \in R \mid u \in L \} \]
     En considérant la projection à droite, on obtient alors le langage $R(L) = \{ v \in \Gamma^* \mid \exists u \in L, (u, v) \in R \}$
-    qui est bien l'image de $L$ par $R$. Donc par la propriété \ref{stabRat}, $R(L)$ est rationel
+    qui est bien l'image de $L$ par $R$. Donc par la proposition \ref{stabRat}, $R(L)$ est rationel
+\end{proof}
+
+\begin{prop}[Composition]
+    La composition de deux relations rationnelles est rationnelle.
+\end{prop}
+
+\begin{proof}
+    Si $T_1 = (\Sigma, \Gamma, Q_1, I_1, F_1, \delta_1)$ et $T_2 = (\Gamma, \Lambda, Q_2, I_2, F_2, \delta_2)$ sont des transducteurs implémentant ces deux relations,
+    on construit un transducteur
+    $T = (\Sigma_{\varepsilon} \times \Gamma \cup \Sigma \times \Gamma_{\varepsilon}, \Lambda, Q_1 \times Q_2, I_1 \times I_2, F_1 \times F_2, \delta_3)$
+    où $\delta_3$ est définie pour $(q_1, q_2) \in Q_1 \times Q_2$ :
+    \begin{equation*}
+        \begin{split}
+            &\forall c \in \Lambda_{\varepsilon}, \forall q_2' \in \delta_2(q_2, \varepsilon, c), (q_1, q_2') \in \delta_3((q_1, q_2),
+            (\varepsilon, \varepsilon), c)\\
+            &\forall a \in \Sigma, \forall q_1' \in \delta_1(q_1, a, \varepsilon), (q_1', q_2) \in \delta_3((q_1, q_2), (a, \varepsilon), \varepsilon)\\
+            &\forall a \in \Sigma_{\varepsilon}, \forall b \in \Gamma, \forall c \in \Lambda_{\varepsilon},
+            \forall q_1' \in \delta_1(q_1, a, b), \forall q_2' \in \delta_2(q_2, b, c), (q'_1, q'_2) \in \delta_3(q_1, q_2, (a, b), c)
+        \end{split}
+    \end{equation*}
+    L'idée derrière $T$ est d'effectuer le calcul de $T_1$, et à chaque fois qu'une lettre est produite en sortie, on donne cette dernière en entrée
+    à $T_2$ et l'on fait ainsi avancer le calcul de $T_2$
+    \\~\\
+    Notons que, si l'on regarde uniquement le premier élément du couple des états, on retrouve exactement le comportement de $T_1$.
+    Si on regarde uniquement les deuxièmes éléments des couples des états, on trouve le deuxième transducteur, qui lit chaque lettre du deuxièle élément
+    du couple de sortie au moment de la transition étiquetée en sortie par cette lettre.
+    \\~\\
+    Cet automate implémente donc la relation binaire $[T]$ qui contient $((u, v), w)$ si et seulement si $(u, v)$ est dans la première relation,
+    et $(v, w)$ dans la deuxième. De la même manière que dans la proposition \ref{imageRat}, on peut en intersectant $[T]$
+    avec $(\Sigma^* \times \{\varepsilon\}) \times \Lambda^*$ obtenir la relation de $\Sigma^* \times \Lambda^*$
+    en identifiant $\Sigma^* \times \{\varepsilon\}$ à $\Sigma^*$ (rationelle par la construction de la proposition précedente) $[T_1] \circ [T_2]$.
 \end{proof}
 
 Un exemple d'application de ces propriétés de stabilité est une preuve rapide de la rationnalité de $\operatorname*{Pref}(L)$, l'ensemble des préfixes
 d'un langage rationnel $L$ : la relation $\operatorname*{Pref}$ sur $\Sigma^* \times \Sigma^*$ qui met en relation $w$ avec l'ensemble de
 ses préfixes est rationnelle, reconnue par le transducteur figure \ref{transPref}. Par la propriété \ref{imageRat}, on obtient immédiatement la rationnalité de 
 $\operatorname*{Pref}(L)$
+\\~\\
 
 \begin{figure}[h]
     \caption{L'automate reconaissant la relation $\operatorname*{Pref}$ avec $\Sigma = \{a_1, ..., a_n\}$} \label{transPref}
@@ -195,6 +212,27 @@ $\operatorname*{Pref}(L)$
     \end{tikzpicture}
     \end{center}
 \end{figure}
+
+Notons toutefois que certaines propriétés de stabilité des automates finis ne se transmettent pas aux relations rationelles : c'est le cas par exemple
+de l'intersection et du complémentaire. On se place sur les alphabets $\Sigma = \{a\}$ et $\Gamma = \{a, b\}$. On se donne les relations rationelles suivantes
+reconnues par les transducteurs figure ?.
+\begin{equation*}
+    \begin{split}
+        R_{l} &= \{ (a^n, w) \mid w \in \Gamma^*, n \in \mathbb{N}, |w| = 2n \}\\
+        R_{b} &= \{ (a^n, w) \mid w \in \Gamma^*, n \in \mathbb{N}, |w|_b = n \} 
+    \end{split}
+\end{equation*}
+
+On a alors que
+
+\begin{align*}
+    R &= \{ (a^n, a^n b^n) \mid n \in \mathbb{N} \}\\
+    &= R_l \cap R_b \cap (\operatorname*{Pref})^{-1}
+\end{align*}
+
+alors que $R$ n'est clairement pas rationelle par la proposition \ref{stabRat} car la projection droite de $R$ n'est pas rationelle.
+\\~\\
+(automates Aimeric)
 
 \subsection{Quelques problèmes associés aux transducteurs finis}
 
@@ -275,7 +313,7 @@ $\Sigma^*$. Cela revient à rendre tout les états acceptants
 
 \section{Machines de Mealy}
 
-\subsection{Définiton}
+\subsection{Définition}
 
 Une machine de Mealy est également un cas particulier de transducteur fini, moins restrictive à première vue que les machines de Moore.
 Il s'agit d'un transducteur déterministe sans $\varepsilon$-transition.
