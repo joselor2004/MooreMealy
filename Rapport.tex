@@ -106,7 +106,7 @@ les relations rationelles. Généralisons pour cela les opérations usuelles sur
 \end{define}
 
 \begin{define}
-    L'ensemble des relations rationelles est défini comme le plus petit ensemble de langages stable par étoile,
+    L'ensemble des relations rationelles est défini comme le plus petit ensemble de relations stable par étoile,
     concaténation et union, et contenant $\varnothing$ et les singletons.
 \end{define}
 
@@ -129,7 +129,7 @@ Cette équivalence permet de voir plus simplement certaines propriétés des tra
 rationnelles.
 \begin{prop}
     Les relations rationnelles sont stables par intersection, complémentaire et inverse. De plus les projections d'une relation
-    rationelle sont des langages rationnels.
+    rationelle sont des langages rationnels. Enfin, la projection sur un langage rationnel est rationnelle.
 \end{prop}
 
 \begin{proof}
@@ -140,7 +140,16 @@ rationnelles.
     Si l'on considère le transducteur où les étiquettes d'entrée et de sorties sont inversées, ce dernier reconnait bien la
     relation $R^{-1}$.\\
     Si l'on considère l'automate obtenu en ne gardant que les étiquettes d'entrée sur les transitions, cet automate reconnait bien $R_{\Sigma}$.
-    On procède de même manière pour $R_{\Gamma}$
+    On procède de même manière pour $R_{\Gamma}$.
+    Enfin, pour les projections $R_L  = \{ y \in \Gamma^* | \exists x, (x, y) \in \R, x \in L \}$ où $L$ est rationnel, la relation $L \times \Gamma^*$ est rationnelle, donc l'instersection projetée à droite l'est aussi.
+\end{proof}
+
+\begin{prop}[Composition de relations rationnelles]
+    La composition de deux relations rationnelles est rationnelle.
+\end{prop}
+
+\begin{proof}
+    Si $(Q_1, \Sigma, \Gamma, I_1, F_1, \delta_1)$ et $(Q_2, \Gamma, \Lambda, I_2, F_2, \delta_2)$ sont des transducteurs implémentant ces deux relations, on construit un automate  $Q_1 \times Q_2, \Sigma, \Gamma \times \Lambda, I_1 \times I_2, F_1 \times F_2, \delta_3)$ avec les transitions $((q_1, q_2), \epsilon, (\espilon, l), (q_1, q_2'))$ pour chaque transition $(q_2, \epsilon, l, q_2')$ avec $l \in \Lambda^*$, les $((q_1, q_2), l, (m, n), (q_1', q_2'))$ pour chaque transition $(q_1, l, m, q_1')$ du premier transducteur et $(q_2, m, n, q_2')$ du deuxième, avec $l \in Sigma^*, m \in \Gamma, n \in \Lambda^*$, et enfin les $((q_1, q_2), l, (\epsilon, \epsilon), (q_1', q_2))$ pour chaque transition $(q_1, l, \epsilon, q_1')$. En effet, si on regarde uniquement le premier élément du couple des états et de la sortie, on retrouve exactement le premier transducteur. Si on regarde uniquement les deuxièmes éléments des couples des états, on trouve le deuxième transducteur, qui lit chaque lettre du premier élément du couple de sortie au moment de la transition étiquetée en sortie par cette lettre. Cet automate implémente donc la relation ternaire qui contient $(u, v, w)$ si et seulement si $(u, v)$ est dans la première relation, et $(v, w)$ dans la deuxième. En ayant seulement le deuxième élément du couple en sortie, on a bien la composition des deux relations.
 \end{proof}
 
 Ajouter la preuve de composition qd mm, à trouver dans le livre de Sakarovitch + propriété des projections
