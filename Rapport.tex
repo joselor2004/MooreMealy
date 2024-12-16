@@ -131,7 +131,7 @@ les transducteurs finis aux relations rationelles
 Cette équivalence permet de voir plus simplement certaines propriété de stabilité des transducteurs finis ou des relations
 rationnelles.
 \begin{prop} \label{stabRat}
-    Les relations rationnelles sont stables par inverse. De plus les projections d'une relation
+    Les relations rationnelles sont stables par inverse et union. De plus les projections d'une relation
     rationelle sont des langages rationnels.
 \end{prop}
 
@@ -141,7 +141,9 @@ rationnelles.
     et de même manière $R_{\Gamma}$, les projections à droite et à gauche de $R$. Soit $T$ un transducteur fini reconaissant $R$.\\
     Si l'on considère le transducteur où les étiquettes d'entrée et de sorties sont inversées, ce dernier reconnait bien la
     relation $R^{-1}$.\\
-    Si l'on considère l'automate obtenu en ne gardant que les étiquettes d'entrée sur les transitions, cet automate reconnait bien $R_{\Sigma}$.
+    Pour obtenir l'union de relations rationnelles, on crée le transducteur ayant pour état initial $q_0$ et des transitions depuis $q_0$
+étiquetées par $(\varepsilon \mid \varepsilon)$ vers des copies des transducteurs reconnaissant ces relations.\\
+    Enfin, si l'on considère l'automate obtenu en ne gardant que les étiquettes d'entrée sur les transitions, cet automate reconnait bien $R_{\Sigma}$.
     On procède de même manière pour $R_{\Gamma}$.\\
 \end{proof}
 
@@ -183,7 +185,7 @@ rationnelles.
     à $T_2$ et l'on fait ainsi avancer le calcul de $T_2$
     \\~\\
     Notons que, si l'on regarde uniquement le premier élément du couple des états, on retrouve exactement le comportement de $T_1$.
-    Si on regarde uniquement les deuxièmes éléments des couples des états, on trouve le deuxième transducteur, qui lit chaque lettre du deuxièle élément
+    Si on regarde uniquement les deuxièmes éléments des couples des états, on trouve le deuxième transducteur, qui lit chaque lettre du deuxième élément
     du couple de sortie au moment de la transition étiquetée en sortie par cette lettre.
     \\~\\
     Cet automate implémente donc la relation binaire $[T]$ qui contient $((u, v), w)$ si et seulement si $(u, v)$ est dans la première relation,
@@ -215,14 +217,13 @@ $\operatorname*{Pref}(L)$
 
 Notons toutefois que certaines propriétés de stabilité des automates finis ne se transmettent pas aux relations rationelles : c'est le cas par exemple
 de l'intersection et du complémentaire. On se place sur les alphabets $\Sigma = \{a\}$ et $\Gamma = \{a, b\}$. On se donne les relations rationelles suivantes
-reconnues par les transducteurs figure ?.
 \begin{equation*}
     \begin{split}
         R_{l} &= \{ (a^n, w) \mid w \in \Gamma^*, n \in \mathbb{N}, |w| = 2n \}\\
         R_{b} &= \{ (a^n, w) \mid w \in \Gamma^*, n \in \mathbb{N}, |w|_b = n \} 
     \end{split}
 \end{equation*}
-
+$R_l$ étant reconnue par l'automate figure \ref{autoRl}, et $R_b$ par \ref{autoRb}.\\
 On a alors que
 
 \begin{align*}
@@ -232,7 +233,37 @@ On a alors que
 
 alors que $R$ n'est clairement pas rationelle par la proposition \ref{stabRat} car la projection droite de $R$ n'est pas rationelle.
 \\~\\
-(automates Aimeric)
+On en déduit également que des passages au complémentaires de relations ne sont généralement pas rationnelles. En effet, si
+c'était le cas,
+$(R_1^C \cup R_2^C)^C  = R_1 \cap R_2$ serait rationnelle puisque l'union l'est (proposition \ref{stabRat}).
+\begin{figure}[h] 
+    \caption{L'automate reconaissant la relation $R_l$}\label{autoRl}
+    \begin{center}
+    \begin{tikzpicture}[auto]
+        \node (q0) [state, initial, initial text= ] {$q_0$};
+        \node (q1) [state, right=of q0] {$q_1$};
+        \node (q2) [state, accepting, below=of q0] {$q_2$};
+
+        \path[-stealth, thick]
+        (q0) edge [bend left] node {$a \mid \{a, b\}$} (q1)
+        (q1) edge [bend left] node {$\varepsilon \mid \{a, b\}$} (q0)
+        (q0) edge node [swap] {$\varepsilon \mid \varepsilon$} (q2);
+    \end{tikzpicture}
+    \end{center}
+\end{figure}
+
+\begin{figure}[h] 
+    \caption{L'automate reconaissant la relation $R_b$}\label{autoRb}
+    \begin{center}
+    \begin{tikzpicture}[auto]
+        \node (q0) [state, initial, accepting, initial text= ] {$q_0$};
+
+        \path[-stealth, thick]
+        (q0) edge [loop above] node {$a \mid b$} (q0)
+        (q0) edge [loop below] node {$\varepsilon \mid a$} (q0);
+    \end{tikzpicture}
+    \end{center}
+\end{figure}
 
 \subsection{Quelques problèmes associés aux transducteurs finis}
 
