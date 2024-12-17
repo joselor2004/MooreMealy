@@ -316,30 +316,11 @@ On peut généraliser la fonction réalisée par $\mathcal{M}$ en la définissan
 $\Sigma^*$. Cela revient à rendre tout les états acceptants
 
 \begin{figure}[h]
-    \caption{Un exemple de machine de Moore implémentant le xor chiffre à chiffre entre deux entiers en binaires}
+    \caption{Un exemple de machine de Moore}
     \begin{center}
-        Si l'on souhaite faire le xor de $101$ et $100$, on donne à notre machine l'entrée
-        $110010$ et cette dernière renvoie $000001$ (un 0 puis le résultat du xor pour chaque chiffre).
-        On ne précise $\lambda(q_0)$ car cette valeur n'est pas utilisée pour définir la fonction de cette machine\\
-        \vspace*{0.5cm}
+        Ouais jsp j'ai envie de mettre une autre machine de Moore un peu golri
         \begin{tikzpicture}[auto, node distance = 1.5cm]
-            \node (q0) [state, initial, initial text= ] {$q_0$};
-            \node (q1) [state with output, above right = of q0] {$q_1$ \nodepart{lower} $0$};
-            \node (q2) [state with output, below right = of q0] {$q_2$ \nodepart{lower} $0$};
-            \node (q3) [state with output, right = of q1] {$q_3$ \nodepart{lower} $1$};
-            \node (q4) [state with output, right = of q2] {$q_4$ \nodepart{lower} $0$};
 
-            \path [-stealth, thick]
-            (q0) edge node {$1$} (q1)
-            (q0) edge node {$0$} (q2)
-            (q1) edge [bend left] node {$0$} (q3)
-            (q1) edge [bend left] node {$1$} (q4)
-            (q2) edge node {$0$} (q4)
-            (q2) edge [bend left] node {$1$} (q3)
-            (q3) edge [bend left] node {$0$} (q2)
-            (q3) edge node {$1$} (q1)
-            (q4) edge [bend left] node {$0$} (q2)
-            (q4) edge [bend left] node {$1$} (q1);
         \end{tikzpicture}
     \end{center}
 \end{figure}
@@ -379,9 +360,9 @@ de Moore.
     en lisant les même mots). Puis pour $w \in L$, considérons le calcul $q_0, ..., q_n$ des machines sur $w$, avec $w = w_1, ..., w_n$. On a que
     \[ f'(w) = \lambda'(q_0, w_1) ... \lambda'(q_{n-1}, w_n) = \lambda(\delta(q_0, w_1)) .... \lambda(\delta(q_{n-1}, w_n)) = q_0 \star w = f(w) \]
     \begin{figure}[h]
-        \caption{Exemple de construction de $\mathcal{M}_2$ depuis $\mathcal{M}_1$}
+        \caption{Exemple de construction d'une machine de Mealy équivalente à une machine de Moore}
         \begin{center}
-        Une machine de Moore $\mathcal{M}_1$ à gauche et à droite la machine de Mealy $\mathcal{M}_2$ correspondante
+        Une machine de Moore à gauche et à droite la machine de Mealy correspondante
         \begin{tikzpicture}[auto, node distance=2cm]
             \node (q0) [state with output, initial, initial text= ] {$q_0$ \nodepart{lower} $a$};
             \node (q1) [state with output, accepting, below right=of q0] {$q_1$ \nodepart{lower} $b$};
@@ -407,6 +388,34 @@ de Moore.
         \end{tikzpicture}
         \end{center}
     \end{figure}
+
+    \vspace*{1cm}
+    On montre maintenant le sens direct. Soit $\mathcal{M}_1 = (\Sigma, \Gamma, Q, q_0, F, \delta, \lambda)$ une machine de Mealy.
+    On suppose quitte à rajouter un état que l'état initial est inacessible depuis n'importe quel autre état. On pose la machine de Moore
+    $\mathcal{M} = (\Sigma, \Gamma, (Q \backslash q_0) \times \Gamma \cup \{q_0\}, F \times \Gamma, \delta', \lambda')$ où
+    $\lambda'$ et $\delta'$ sont définis comme suit
+    \begin{equation*}
+        \begin{split}
+            &\forall a \in \Sigma, \delta'(q_0, a) = \delta(q_0, a)\\
+            &\forall q \in Q \backslash q_0, \forall b \in \Gamma, \forall a \in \Sigma, \delta'(q, b, a) = (\delta(q, a), \lambda(q, a))\\
+            &\forall q \in Q \backslash q_0, \forall b \in \Gamma, \lambda'(q, b) = b
+        \end{split}
+    \end{equation*}
+    Notons d'abord que $w \in \Sigma^*$ est reconnu par l'automate d'entrée de $\mathcal{M}_1$, si et seulement si il l'est par l'automate d'entrée de 
+    $\mathcal{M}$ : en effet, un calcul $q_0, ..., q_n$ dans le premier automate correspond à un calcul $q_0, (q_1, b_1), ..., (q_n, b_n)$
+    dans le second automate avec $b_1, ..., b_n \in \Gamma$ et réciproquement. Soit $L$ le langage reconnu par les deux automates d'entrées,
+    $f$ la fonction implémentée par $\mathcal{M}_1$ et $F$ celle implémentée par $\mathcal{M}$. Pour $w \in L$, $w = w_1 ... w_n$
+    et produisant le calcul $q_0, (q_1, b_1), ..., (q_n, b_n)$ dans $\mathcal{M}$
+    \begin{align*}
+        F(w) &= q_0 \star w\\
+        &= \lambda'(q_1, b_1) ... \lambda'(q_n, b_n)\\
+        &= b_1 ... b_n\\
+        &= \lambda(q_0, w_1) ... \lambda(q_{n-1}, w_n)\\
+        &= f(w)
+    \end{align*}
+    Donc les deux transducteurs sont bien équivalents
+
+    %Mettre dessin
 \end{proof}
 
 \subsection{Propriétés algébriques}
