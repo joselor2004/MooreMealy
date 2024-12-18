@@ -420,6 +420,92 @@ de Moore.
 
 \subsection{Propriétés algébriques}
 
+\begin{define}[Demi-groupe]
+    Soit $G$ un ensemble muni d'une loi de composition interne $\cdot$. Si $\cdot$ est associative, on appelle $G$ un demi-groupe.
+\end{define}
+
+\begin{define}[Taux de croissance]
+    Si $(G, \cdot)$ est un demi-groupe et $A \subset G$ un ensemble fini de générateurs, on peut définir son taux de croissance
+    $\gamma : \mathbb{N} \backslash \{0, 1\} \rightarrow \mathbb{N}$ de la façon suivante : pour $n \geq 2$, $\gamma(n)$ est le nombre d'élements
+    de $G$ étant produits de $n$ générateurs mais n'étant pas soi même un générateur. En d'autres termes
+    \[ \gamma(n) = |\{ g_1 ... g_n \mid g_1, ..., g_n \in A \} \backslash A| \]
+\end{define}
+
+Si $\Sigma$ est un alphabet fini, $\Sigma^*$ est un monoïde donc un demi-groupe. Son taux de croissance est exponentiel : en effet
+on a ici $\gamma(n) = |\Sigma|^n$, $n \geq 2$ car tout mot de longueur au moins 2 n'est pas une lettre. Si l'on ajoute à $\Sigma$
+les lettres $a^{-1}$ pour tout $a \in \Sigma$ et que l'on quotiente $\Sigma^*$ par la relation d'équivalence rendant équivalent les produits $aa^{-1}$,
+$a^{-1}a$ et $\varepsilon$ pour tout $a \in \Sigma$, on obtient alors un groupe non commutatif. Son taux de croissance est également exponentiel :
+on compte tout les mots possibles de $2$ à $n$ lettres tels que chaque lettre ne peut être suivie de son inverse, donc
+\begin{align*}
+    \gamma(n) &= \sum_{k=2}^n (2|\Sigma|)(2|\Sigma|-1)^{k-1}\\
+    &\sim 2|\Sigma|(2|\Sigma|-1)^n
+\end{align*}
+\\~\\
+Le demi-groupe libre $\mathbb{N}^k \backslash 0$ ayant pour générateurs la base canonique a un taux de croissance polynômial : on a pour $n \geq 2$
+\begin{align*}
+    \gamma(n) &= |\{g_1 + ... + g_n \mid g_1, ..., g_n \in \{ e_1, ..., e_k \} \}|\\
+    &= \left| \left\{ (m_1, ..., m_k) \in \mathbb{N} \mid \sum_{i=1}^k m_i = n 
+    \right\} \right|\\
+    &\leq n^k
+\end{align*}
+\\~\\
+On se demande alors si il existe des demi-groupes tels que leur taux de croissance soit compris strictement entre polynômial et exponentiel, et si
+les groupes, plus stricts que les demi-groupes, peuvent également réaliser ces conditions.
+Les machines de Mealy permettent de répondre à ces deux questions
+\\~\\
+On se fixe une machine de Mealy $\mathcal{M} = (\{0, 1\}, \{0, 1\}, Q, \delta, \lambda)$ (on ignore ici les états finaux et initiaux)
+pour la suite de cette section. Pour tout $q \in Q$, on définit
+\[ \rho_q : \begin{array}{cl}
+    \{0, 1\}^* &\longrightarrow \{0, 1\}^*\\
+    w &\longmapsto q \star w 
+\end{array} \]
+On notera $G_{\mathcal{M}}$ le demi-groupe engendré par les $(\rho_q)_{q \in Q}$ avec l'opération de composition. La machine de Mealy figure
+\ref{croisInt},
+engendre un groupe $G_{\mathcal{M}}$ ayant un taux de croissance intermédiaire, entre polynômial et exponentiel, qui est le suivant \cite{intGrowth}
+\[ \gamma(n) \sim 2^{5/2}3^{3/4}\pi^{-2}n^{1/4}\exp(\pi\sqrt{n/6}) \]
+
+\begin{figure}[h]
+    \caption{Une machine de Mealy produisant un demi-groupe à croissance intermédiaire}\label{croisInt}
+    \begin{center}
+        \begin{tikzpicture}[auto, node distance=2cm]
+            \node (a) [state] {$a$};
+            \node (b) [state, right=of a] {$b$};
+
+            \path[-stealth, thick]
+            (a) edge[loop above] node {$0 \mid 1$} (a)
+            (a) edge node {$1 \mid 1$} (b)
+            (b) edge[loop above] node {$0 \mid 1$} (b)
+            (b) edge[loop below] node {$1 \mid 0$} (b);
+        \end{tikzpicture}
+    \end{center}
+\end{figure}
+
+Un autre exemple est l'automate de la figure \ref{grigorchuk} \cite{grigor1}, dont le demi-groupe engendré est en fait un groupe
+(de Grigorchuk), et ayant lui aussi un taux de croissance intermédiaire \cite{grigor2}. 
+
+\begin{figure}[h]
+    \caption{L'automate de Mealy engendrant le groupe de Grigorchuk}\label{grigorchuk}
+    \begin{center}
+        \begin{tikzpicture}[auto, node distance=2cm]
+            \node (a) [state] {$a$};
+            \node (c) [state, above right=of a] {$c$};
+            \node (b) [state, above left=of c] {$b$};
+            \node (d) [state, above right= of c] {$d$};
+            \node (e) [state, below right=of c] {$e$};
+
+            \path[-stealth, thick]
+            (a) edge node {$\substack{0 \mid 1 \\ 1 \mid 0}$} (e)
+            (b) edge node {$0 \mid 0$} (a)
+            (b) edge node {$1 \mid 1$} (c)
+            (c) edge node {$0 \mid 0$} (a)
+            (c) edge node {$1 \mid 1$} (d)
+            (d) edge node {$1 \mid 1$} (b)
+            (d) edge node {$0 \mid 0$} (e)
+            (e) edge[loop right] node {$\substack{0 \mid 1 \\ 1 \mid 0}$} (e);
+        \end{tikzpicture}
+    \end{center}
+\end{figure}
+
 \bibliographystyle{plain}
 \bibliography{Rapport}
 
