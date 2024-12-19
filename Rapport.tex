@@ -61,7 +61,7 @@ $\delta^* : Q \times \Sigma^* \times \Gamma^* \longrightarrow \mathcal{P}(Q)$ pa
 On définit ici la relation reconnue par un transducteur fini, de manière similaire que les
 langages reconnus par les automates.
 \begin{define}
-    On défini $[T]$ la relation reconnue par un transducteur fini $T$, définie comme suit :
+    On définit $[T]$ la relation reconnue par un transducteur fini $T$, définie comme suit :
     \[ \forall (u, v) \in \Sigma^* \times \Gamma^*, u[T]v \Leftrightarrow \exists q \in I, \exists r \in F,
     r \in \delta^*(q, u, v) \]
 \end{define}
@@ -86,14 +86,14 @@ langages reconnus par les automates.
     \end{center}
 \end{figure}
 
-\begin{prop}[Généralisation]
-    On peut s'autoriser des fonctions de transition $Q \times \Sigma^* \times \Gamma^* \longrightarrow P(Q)$ tant qu'il n'y a qu'un nombre fini de triplets $(q, w, v) \in Q \times \Sigma^* \times \Gamma^*$ tels que $\delta(q, v, w) \neq \emptyset$. En effet,
+
+On peut généraliser ces définitions en s'autorisant des fonctions de transition $Q \times \Sigma^* \times \Gamma^* \longrightarrow 
+\mathcal{P}(Q)$
+tant qu'il n'y a qu'un nombre fini de
+triplets $(q, w, v) \in Q \times \Sigma^* \times \Gamma^*$ tels que $\delta^*(q, w, v) \neq \emptyset$. En effet,
 ajouter cette transition correspond à ajouter les états $q=q_0, q_1, \dots q_{\mid w \mid} = q'_0, q'_1, \dots, q'_{\mid v \mid-1}$
 avec les transitions $\delta(q_i, w_i, \varepsilon )= \{q_{i+1}\}$, les $\delta(q'_i, \varepsilon, v_i) =\{q'_{i+1}\}$, et enfin
 $\delta(q_{\mid v \mid -1}, \varepsilon, v_{-1}) = \delta(q, w, v)$.
-\end{prop}
-
-\vspace*{2cm}
 
 \subsection{Relations rationnelles}
 
@@ -235,9 +235,9 @@ On a alors que
 
 alors que $R$ n'est clairement pas rationelle par la proposition \ref{stabRat} car la projection droite de $R$ n'est pas rationelle.
 \\~\\
-On en déduit également que des passages au complémentaires de relations ne sont généralement pas rationnelles. En effet, si
+On en déduit également que mes passages au complémentaires de relations rationelles ne sont généralement pas rationnelles. En effet, si
 c'était le cas,
-$(R_1^C \cup R_2^C)^C  = R_1 \cap R_2$ serait rationnelle puisque l'union l'est (proposition \ref{stabRat}).
+$(R_1^C \cup R_2^C)^C  = R_1 \cap R_2$ serait rationnelle puisque l'union l'est.
 \begin{figure}[h] 
     \caption{Le transducteur reconaissant la relation $R_l$}\label{autoRl}
     \begin{center}
@@ -280,15 +280,16 @@ De manière assez surprenante, étant donnés les résultats connus pour les aut
     Cette preuve réduit le problème d'équivalence de Post vers l'équivalence de deux transducteurs.\\
     On rappelle l'énoncé du problème d'équivalence de Post, indécidable :
     \begin{define}[Problème d'équivalence de Post]
-    Étant donné deux listes finies de mots dans $\Gamma^*\backslash \{\varepsilon\}$ $\alpha_1, \dots, \alpha_n , \beta_1, \dots, \beta_n$, existe-t-il une suite $(i_k)_{1\leq k \leq N}$ telle que $\alpha_{i_1} \alpha_{i_2} \dots \alpha_{i_N} = \beta_{i_1} \beta_{i_2} \dots \beta_{i_N}$ ?
+        Étant donné deux listes finies de mots dans $\Gamma^*\backslash \{\varepsilon\}$ $\alpha_1, \dots, \alpha_n , \beta_1, \dots, \beta_n$,
+        existe-t-il une suite $(i_k)_{1\leq k \leq N}$ telle que $\alpha_{i_1} \alpha_{i_2} \dots \alpha_{i_N} = \beta_{i_1} \beta_{i_2} \dots \beta_{i_N}$ ?
     \end{define}
     En posant $g(x_i)=\alpha_i$ et similairement $h(x_i)=\beta_i$ sur un alphabet $\Sigma=\{x_1, \dots, x_n\}$ et $h(ab) = h(a)h(b)$,
     le problème devient : existe-t-il un mot $w\in \Sigma^*\backslash \{\varepsilon \}$ tel que $g(w) = h(w)$ ?\\
     On construit le transducteur de la figure \ref{autoG-h} qui à un mot $x$ associe $\Gamma^* \backslash \{h(x)\}$.\\
     Ici, l'état marqué $-$ reçoit les mots qui ont moins de lettre que $h(x)$, $+$ ceux qui ont plus de lettres que $h(x)$, et $\neq$
     ceux qui ont au moins un caractère différent.\\
-    Similairement, on construit le transducteur qui à $x$ associe tous les mots sauf $g(x)$. Enfin, par la propriété \ref{stabRat}, on
-    peut construire l'automate qui reconnaît l'union. L'union de ces deux ensembles est d'ailleurs $\Sigma^* \times \Gamma^*$ sauf 
+    Similairement, on construit le transducteur qui à $x$ associe tous les mots sauf $g(x)$. Enfin, par l'équivalence relation rationelle transducteurs, on
+    peut construire le transducteur qui reconnaît l'union. L'union de ces deux relations reconnues est d'ailleurs $\Sigma^* \times \Gamma^*$ sauf 
     s'il existe un $x$ tel que $f(x) = g(x)$ : l'équivalence de ce transducteur avec le transducteur reconnaissant tout $\Sigma^* \times
     \Gamma^*$ permet donc de conclure.
 
