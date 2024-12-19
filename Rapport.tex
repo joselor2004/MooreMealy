@@ -87,14 +87,6 @@ langages reconnus par les automates.
 \end{figure}
 
 
-On peut généraliser ces définitions en s'autorisant des fonctions de transition $Q \times \Sigma^* \times \Gamma^* \longrightarrow 
-\mathcal{P}(Q)$
-tant qu'il n'y a qu'un nombre fini de
-triplets $(q, w, v) \in Q \times \Sigma^* \times \Gamma^*$ tels que $\delta^*(q, w, v) \neq \emptyset$. En effet,
-ajouter cette transition correspond à ajouter les états $q=q_0, q_1, \dots q_{\mid w \mid} = q'_0, q'_1, \dots, q'_{\mid v \mid-1}$
-avec les transitions $\delta(q_i, w_i, \varepsilon )= \{q_{i+1}\}$, les $\delta(q'_i, \varepsilon, v_i) =\{q'_{i+1}\}$, et enfin
-$\delta(q_{\mid v \mid -1}, \varepsilon, v_{-1}) = \delta(q, w, v)$.
-
 \subsection{Relations rationnelles}
 
 Soient $\Sigma$ et $\Gamma$ des alphabets finis. Nous allons ici étudier une classe particulière
@@ -277,26 +269,29 @@ De manière assez surprenante, étant donnés les résultats connus pour les aut
 \end{theorem}
 
 \begin{proof}
-    Cette preuve réduit le problème d'équivalence de Post vers l'équivalence de deux transducteurs.\\
+    Cette preuve réduit le problème d'équivalence de Post vers le problème d'équivalence de deux transducteurs.\\
     On rappelle l'énoncé du problème d'équivalence de Post, indécidable :
     \begin{define}[Problème d'équivalence de Post]
         Étant donné deux listes finies de mots dans $\Gamma^*\backslash \{\varepsilon\}$ $\alpha_1, \dots, \alpha_n , \beta_1, \dots, \beta_n$,
         existe-t-il une suite $(i_k)_{1\leq k \leq N}$ telle que $\alpha_{i_1} \alpha_{i_2} \dots \alpha_{i_N} = \beta_{i_1} \beta_{i_2} \dots \beta_{i_N}$ ?
     \end{define}
+
     En posant $g(x_i)=\alpha_i$ et similairement $h(x_i)=\beta_i$ sur un alphabet $\Sigma=\{x_1, \dots, x_n\}$ et $h(ab) = h(a)h(b)$,
-    le problème devient : existe-t-il un mot $w\in \Sigma^*\backslash \{\varepsilon \}$ tel que $g(w) = h(w)$ ?\\
-    On construit le transducteur de la figure \ref{autoG-h} qui à un mot $x$ associe $\Gamma^* \backslash \{h(x)\}$.\\
+    le problème devient : existe-t-il un mot $w\in \Sigma^*\backslash \{\varepsilon \}$ tel que $g(w) = h(w)$ ?
+    \\~\\
+    On se permettra d'étiqueter les transitions $q \rightarrow p$ des transducteurs que l'on va construire par des étiquettes $(a, w)$ où
+    $a \in \Sigma_{\varepsilon}$ et $w \in \Gamma^*$ de longueur $n$, quitte à rajouter plusieurs transitions et états intermédiaires $q = q'_1, ..., q'_n$
+    tels que $\delta(q'_i, \varepsilon, w_i) = \{q'_{i+1}\}$ pour $1 \leq i \leq n-1$, et $\delta(q'_n, a, w_n) = \{p\}$\\
+    On construit le transducteur de la figure \ref{autoG-h} qui à un mot $x$ associe $\Gamma^* \backslash \{h(x)\}$.
     Ici, l'état marqué $-$ reçoit les mots qui ont moins de lettre que $h(x)$, $+$ ceux qui ont plus de lettres que $h(x)$, et $\neq$
     ceux qui ont au moins un caractère différent.\\
-    Similairement, on construit le transducteur qui à $x$ associe tous les mots sauf $g(x)$. Enfin, par l'équivalence relation rationelle transducteurs, on
-    peut construire le transducteur qui reconnaît l'union. L'union de ces deux relations reconnues est d'ailleurs $\Sigma^* \times \Gamma^*$ sauf 
-    s'il existe un $x$ tel que $f(x) = g(x)$ : l'équivalence de ce transducteur avec le transducteur reconnaissant tout $\Sigma^* \times
-    \Gamma^*$ permet donc de conclure.
+    De manière similaire, on construit le transducteur qui à $x$ associe tous les mots sauf $g(x)$. Les deux transducteurs que l'on vient
+    de construire sont alors équivalents si et seulement si $g(x) = h(x)$. On a bien notre réduction
 
 \begin{figure}[h] 
     \caption{Le transducteur qui à un mot $x$ associe $\Gamma^* \backslash \{h(x)\}$} \label{autoG-h}
     \begin{center}
-    \begin{tikzpicture}[auto]
+    \begin{tikzpicture}[auto, node distance = 1.4cm]
         \node (q0) [state, initial, initial text= ] {$q_0$};
         \node (q1) [state, accepting, above= of q0] {$-$};
         \node (q2) [state, accepting, right= of q0] {$\neq$};
