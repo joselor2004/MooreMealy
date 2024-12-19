@@ -12,8 +12,6 @@
 \usetikzlibrary{automata, arrows.meta, positioning}
 \usepackage{Macros}
 
-\SetKwProg{Fun}{Function}{ is}{end}
-
 \title{Rapport : Transducteurs et machines de Moore et Mealy}
 
 \begin{document}
@@ -94,7 +92,7 @@ langages reconnus par les automates.
 
 Soient $\Sigma$ et $\Gamma$ des alphabets finis. Nous allons ici étudier une classe particulière
 de relations entre $\Sigma^*$ et $\Gamma^*$, que l'on peut voir comme des parties de $\Sigma^* \times \Gamma^*$,
-les relations rationelles. Généralisons pour cela les opérations usuelles sur les langages :
+les relations rationelles. Généralisons pour cela les opérations usuelles sur les langages 
 
 \begin{define}
     Soient $R, R' \subset \Sigma^* \times \Gamma^*$ des relations. On pose
@@ -115,17 +113,10 @@ $\Sigma^* \times \Gamma^*$.\\
 Comme pour les automates on a bien équivalence entre les relations reconnues par des transducteurs finis
 et les relations rationelles.
 
-\begin{prop}[Généralisation]
-    On peut s'autoriser des fonctions de transition $Q \times \Sigma^* \times \Gamma^* \longrightarrow P(Q)$ tant qu'il n'y a qu'un nombre fini de triplets $(q, w, v) \in Q \times \Sigma^* \times \Gamma^*$ tels que $\delta(q, v, w) \neq \emptyset$. En effet,
-ajouter cette transition correspond à ajouter les états $q=q_0, q_1, \dots q_{\mid w \mid} = q'_0, q'_1, \dots, q'_{\mid v \mid-1}$
-avec les transitions $\delta(q_i, w_i, \varepsilon )= \{q_{i+1}\}$, les $\delta(q'_i, \varepsilon, v_i) =\{q'_{i+1}\}$, et enfin
-$\delta(q_{\mid v \mid -1}, \varepsilon, v_{-1}) = \delta(q, w, v)$.
-\end{prop}
-
 \subsection{Propriétés des relations rationnelles et transducteurs finis}
 
 De manière analogue au cas des automates finis et des langages rationnels, on dispose du théorème suivant reliant
-les transducteurs finis aux relations rationelles :
+les transducteurs finis aux relations rationelles
 
 \begin{theorem}
     Une relation $R$ est rationelle si et seulement si elle est reconnue par un transducteur fini $T$
@@ -138,7 +129,7 @@ les transducteurs finis aux relations rationelles :
 Cette équivalence permet de voir plus simplement certaines propriété de stabilité des transducteurs finis ou des relations
 rationnelles.
 \begin{prop} \label{stabRat}
-    Les relations rationnelles sont stables par inverse et union. De plus les projections d'une relation
+    Les relations rationnelles sont stables par inverse. De plus les projections d'une relation
     rationelle sont des langages rationnels.
 \end{prop}
 
@@ -148,14 +139,11 @@ rationnelles.
     et de même manière $R_{\Gamma}$, les projections à droite et à gauche de $R$. Soit $T$ un transducteur fini reconaissant $R$.\\
     Si l'on considère le transducteur où les étiquettes d'entrée et de sorties sont inversées, ce dernier reconnait bien la
     relation $R^{-1}$.\\
-    Pour obtenir l'union de relations rationnelles, on crée le transducteur ayant pour état initial $q_0$ et des transitions depuis $q_0$
-étiquetées par $(\varepsilon \mid \varepsilon)$ vers des copies des transducteurs reconnaissant ces relations.\\
-    Enfin, si l'on considère l'automate obtenu en ne gardant que les étiquettes d'entrée sur les transitions, cet automate reconnait bien $R_{\Sigma}$.
-    On procède de même manière pour $R_{\Gamma}$.\\
+    % Aimeric c déja stable par union par déf mdr
 \end{proof}
 
 \begin{prop} \label{imageRat}
-    Soit $L \subset \Sigma^*$ rationnel. L'image par $R$ une relation rationnelle de $L$ est également régulière.
+    Soit $L \subset \Sigma^*$ rationnel. L'image par $R$ une relation rationnelle de $L$ est également régulière
 \end{prop}
 
 \begin{proof}
@@ -167,7 +155,7 @@ rationnelles.
     ayant pour états finaux les produits des états finaux, ce dernier reconait la relation
     \[ R' = \{ (u, v) \in R \mid u \in L \} \]
     En considérant la projection à droite, on obtient alors le langage $R(L) = \{ v \in \Gamma^* \mid \exists u \in L, (u, v) \in R \}$
-    qui est bien l'image de $L$ par $R$. Donc par la proposition \ref{stabRat}, $R(L)$ est rationel.
+    qui est bien l'image de $L$ par $R$. Donc par la proposition \ref{stabRat}, $R(L)$ est rationel
 \end{proof}
 
 \begin{prop}[Composition]
@@ -195,7 +183,7 @@ rationnelles.
     Si on regarde uniquement les deuxièmes éléments des couples des états, on trouve le deuxième transducteur, qui lit chaque lettre du deuxième élément
     du couple de sortie au moment de la transition étiquetée en sortie par cette lettre.
     \\~\\
-    Cet automate implémente donc la relation binaire $[T]$ qui contient $((u, v), w)$ si et seulement si $(u, v)$ est dans la première relation,
+    Ce transducteur implémente donc la relation binaire $[T]$ qui contient $((u, v), w)$ si et seulement si $(u, v)$ est dans la première relation,
     et $(v, w)$ dans la deuxième. De la même manière que dans la proposition \ref{imageRat}, on peut en intersectant $[T]$
     avec $(\Sigma^* \times \{\varepsilon\}) \times \Lambda^*$ obtenir la relation de $\Sigma^* \times \Lambda^*$
     en identifiant $\Sigma^* \times \{\varepsilon\}$ à $\Sigma^*$ (rationelle par la construction de la proposition précedente) $[T_1] \circ [T_2]$.
@@ -208,7 +196,7 @@ $\operatorname*{Pref}(L)$
 \\~\\
 
 \begin{figure}[h]
-    \caption{L'automate reconaissant la relation $\operatorname*{Pref}$ avec $\Sigma = \{a_1, ..., a_n\}$} \label{transPref}
+    \caption{Le transducteur reconaissant la relation $\operatorname*{Pref}$ avec $\Sigma = \{a_1, ..., a_n\}$} \label{transPref}
     \begin{center}
     \begin{tikzpicture}[auto]
         \node (q0) [state, initial, initial text= ] {$q_0$};
@@ -223,14 +211,14 @@ $\operatorname*{Pref}(L)$
 \end{figure}
 
 Notons toutefois que certaines propriétés de stabilité des automates finis ne se transmettent pas aux relations rationelles : c'est le cas par exemple
-de l'intersection et du complémentaire. On se place sur les alphabets $\Sigma = \{a\}$ et $\Gamma = \{a, b\}$. On se donne les relations rationelles suivantes :
+de l'intersection et du complémentaire. On se place sur les alphabets $\Sigma = \{a\}$ et $\Gamma = \{a, b\}$. On se donne les relations rationelles suivantes
 \begin{equation*}
     \begin{split}
         R_{l} &= \{ (a^n, w) \mid w \in \Gamma^*, n \in \mathbb{N}, |w| = 2n \}\\
         R_{b} &= \{ (a^n, w) \mid w \in \Gamma^*, n \in \mathbb{N}, |w|_b = n \} 
     \end{split}
 \end{equation*}
-$R_l$ étant reconnue par l'automate figure \ref{autoRl}, et $R_b$ par \ref{autoRb}.\\
+$R_l$ étant reconnue par le transducteur figure \ref{autoRl}, et $R_b$ par \ref{autoRb}.\\
 On a alors que
 
 \begin{align*}
@@ -252,8 +240,8 @@ $(R_1^C \cup R_2^C)^C  = R_1 \cap R_2$ serait rationnelle puisque l'union l'est 
         \node (q2) [state, accepting, below=of q0] {$q_2$};
 
         \path[-stealth, thick]
-        (q0) edge [bend left] node {$a \mid \{a, b\}$} (q1)
-        (q1) edge [bend left] node {$\varepsilon \mid \{a, b\}$} (q0)
+        (q0) edge [bend left] node {$a \mid \Gamma$} (q1)
+        (q1) edge [bend left] node {$\varepsilon \mid \Gamma$} (q0)
         (q0) edge node [swap] {$\varepsilon \mid \varepsilon$} (q2);
     \end{tikzpicture}
     \end{center}
@@ -274,53 +262,20 @@ $(R_1^C \cup R_2^C)^C  = R_1 \cap R_2$ serait rationnelle puisque l'union l'est 
 
 \subsection{Quelques problèmes associés aux transducteurs finis}
 
-\begin{theorem}
-    Le problème de l'équivalence de deux transducteurs est indécidable.
-\end{theorem}
-
-\begin{proof}
-    Cette preuve réduit le problème d'équivalence de Post vers l'équivalence de deux transducteurs.\\
-    On rappelle l'énoncé du problème d'équivalence de Post, indécidable :
-    \begin{define}[Problème d'équivalence de Post]
-    Étant donné deux listes finies de mots dans $\Gamma^*\backslash \{\varepsilon\}$ $\alpha_1, \dots, \alpha_n , \beta_1, \dots, \beta_n$, existe-t-il une suite $(i_k)_{1\leq k \leq N}$ telle que $\alpha_{i_1} \alpha_{i_2} \dots \alpha_{i_N} = \beta_{i_1} \beta_{i_2} \dots \beta_{i_N}$ ?
-    \end{define}
-    En posant $g(x_i)=\alpha_i$ et similairement $h(x_i)=\beta_i$ sur un alphabet $\Sigma=\{x_1, \dots, x_n\}$ et $h(ab) = h(a)h(b)$,
-    le problème devient : existe-t-il un mot $w\in \Sigma^*\backslash \{\varepsilon \}$ tel que $g(w) = h(w)$ ?\\
-    On construit le transducteur de la figure \ref{autoG-h} qui à un mot $x$ associe $\Gamma^* \backslash \{h(x)\}$.\\
-    Ici, l'état marqué $-$ reçoit les mots qui ont moins de lettre que $h(x)$, $+$ ceux qui ont plus de lettres que $h(x)$, et $\neq$
-    ceux qui ont au moins un caractère différent.\\
-    Similairement, on construit le transducteur qui à $x$ associe tous les mots sauf $g(x)$. Enfin, par la propriété \ref{stabRat}, on
-    peut construire l'automate qui reconnaît l'union. L'union de ces deux ensembles est d'ailleurs $\Sigma^* \times \Gamma^*$ sauf 
-    s'il existe un $x$ tel que $f(x) = g(x)$ : l'équivalence de ce transducteur avec le transducteur reconnaissant tout $\Sigma^* \times
-    \Gamma^*$ permet donc de conclure.
-
-\begin{figure}[h] 
-    \caption{Le transducteur qui à un mot $x$ associe $\Gamma^* \backslash \{h(x)\}$} \label{autoG-h}
-    \begin{center}
-    \begin{tikzpicture}[auto]
-        \node (q0) [state, initial, initial text= ] {$q_0$};
-        \node (q1) [state, accepting, above= of q0] {$-$};
-        \node (q2) [state, accepting, right= of q0] {$\neq$};
-        \node (q3) [state, accepting, below= of q0] {$+$};
-
-        \path[-stealth, thick]
-        (q0) edge [loop left] node {$l \mid h(l)$} (q0)
-        (q0) edge node {$\Sigma \mid \varepsilon$} (q1)
-        (q1) edge [loop above] node {$\Sigma \mid \Gamma_\varepsilon$} (q1)
-        (q0) edge node {$\substack{l \mid v \\ \mid v \mid = \mid h(l) \mid \\ v \neq h(l)}$} (q2)
-        (q2) edge [loop right] node {$\Sigma_\varepsilon \mid \Gamma_\varepsilon$} (q2)
-        (q0) edge node {$\varepsilon \mid \Gamma$} (q3)
-        (q3) edge [loop below] node {$\Sigma_\varepsilon \mid \Gamma$} (q3);
-    \end{tikzpicture}
-    \end{center}
-\end{figure}
-\end{proof}
+Une question naturelle que l'on peut se poser est celle de déterminer si deux transducteur $T_1$ et $T_2$ implémentent la même relation rationelle.
+De manière assez surprenante, étant donnés les résultats connus pour les automates finis, ce problème est, dans le cas général, indécidable \cite{indecEqu} (une
+preuve utilise le problème de correspondance de Post).
+\\~\\
+On peut également se poser la question du caractère fonctionnel d'un transducteur : étant donné un transducteur fini $T$, est il possible de déterminer
+si ce dernier est fonctionnel ou non, c'est à dire que la relation qu'il implémente est en réalité une fonction ? Ce problème est décidable
+\cite{sakarovitch} et l'est même en temps polynômial en la taille de $T$ : la preuve utilise des notions algébriques sur les monoïdes pour
+aboutir à une caractérisation de la fonctionnalité de $T$
 
 \section{Machines de Moore}
 
 Une machine de Moore est un cas particulier d'un transducteur fini : d'abord une telle machine est déterministe
 et implémente donc non pas une relation rationelle mais une fonction, qui sera appelée rationelle. La contrainte
-supplémentaire sur ces machines est que la lettre de sortie lue ne dépend que de l'état actuel de l'automate.
+supplémentaire sur ces machines est que la lettre de sortie lue ne dépend que de l'état actuel de la machine.
 
 \subsection{Définition et exemple}
 
@@ -361,33 +316,16 @@ On peut généraliser la fonction réalisée par $\mathcal{M}$ en la définissan
 $\Sigma^*$. Cela revient à rendre tout les états acceptants
 
 \begin{figure}[h]
-    \caption{Un exemple de machine de Moore implémentant le xor chiffre à chiffre entre deux entiers en binaire}
+    \caption{Un exemple de machine de Moore}
     \begin{center}
-        Si l'on souhaite faire le xor de $101$ et $100$, on donne à notre machine l'entrée
-        $110010$ et cette dernière renvoie $000001$ (un 0 puis le résultat du xor pour chaque chiffre).
-        On ne précise $\lambda(q_0)$ car cette valeur n'est pas utilisée pour définir la fonction de cette machine.\\
-        \vspace*{0.5cm}
+        Ouais jsp j'ai envie de mettre une autre machine de Moore un peu golri
         \begin{tikzpicture}[auto, node distance = 1.5cm]
-            \node (q0) [state, initial, initial text= ] {$q_0$};
-            \node (q1) [state with output, above right = of q0] {$q_1$ \nodepart{lower} $0$};
-            \node (q2) [state with output, below right = of q0] {$q_2$ \nodepart{lower} $0$};
-            \node (q3) [state with output, right = of q1] {$q_3$ \nodepart{lower} $1$};
-            \node (q4) [state with output, right = of q2] {$q_4$ \nodepart{lower} $0$};
 
-            \path [-stealth, thick]
-            (q0) edge node {$1$} (q1)
-            (q0) edge node {$0$} (q2)
-            (q1) edge [bend left] node {$0$} (q3)
-            (q1) edge [bend left] node {$1$} (q4)
-            (q2) edge node {$0$} (q4)
-            (q2) edge [bend left] node {$1$} (q3)
-            (q3) edge [bend left] node {$0$} (q2)
-            (q3) edge node {$1$} (q1)
-            (q4) edge [bend left] node {$0$} (q2)
-            (q4) edge [bend left] node {$1$} (q1);
         \end{tikzpicture}
     \end{center}
 \end{figure}
+
+\vspace*{2cm}
 
 \section{Machines de Mealy}
 
@@ -401,9 +339,175 @@ $\lambda$ qui est cette fois $\lambda : Q \times \Sigma \rightarrow \Gamma$. La 
 est définie de manière très similaire à celle pour les machines de Moore (il suffit juste de tenir comptre de la lettre de $\Sigma$ lue à chaque
 étape du calcul)
 
+%Tu peux faire une jolie machine de Mealy ici stv en exemple
+
 \subsection{Equivalence avec Moore}
 
+Le théorème suivant montre que malgré une plus grande expressivité à première vue, les machines de Mealy sont en fait aussi expressives que les machines
+de Moore.
+
+\begin{theorem}
+    Pour toute machine de Mealy il existe une machine de Moore équivalente (implémentant la même fonction) et réciproquement
+\end{theorem}
+
+\begin{proof}
+    Considérons d'abord le sens réciproque. Soit $\mathcal{M}_1 = (\Sigma, \Gamma, Q, q_0, F, \delta, \lambda)$ une machine de Moore et notons $f$ la
+    fonction rationelle implémentée par $\mathcal{M}_1$. La machine de Mealy $\mathcal{M}_2 = (\Sigma, \Gamma, Q, q_0, F, \delta, \lambda')$ où
+    $\lambda'$ est définie de la manière suivante
+    \[ \forall q \in Q, \forall a \in \Sigma, \lambda'(q, a) = \lambda(\delta(q, a)) \]
+    implémente la fonction $f$. Notons $f'$ la fonction implémentée par $\mathcal{M}_2$. On note d'abord que le langage rationnel $L$ reconnu par l'automate
+    sous jacent est le même pour les 2 machines. En effet les deux machines effectuent les mêmes calculs (les mêmes suites d'états sont produites
+    en lisant les même mots). Puis pour $w \in L$, considérons le calcul $q_0, ..., q_n$ des machines sur $w$, avec $w = w_1, ..., w_n$. On a que
+    \[ f'(w) = \lambda'(q_0, w_1) ... \lambda'(q_{n-1}, w_n) = \lambda(\delta(q_0, w_1)) .... \lambda(\delta(q_{n-1}, w_n)) = q_0 \star w = f(w) \]
+    \begin{figure}[h]
+        \caption{Exemple de construction d'une machine de Mealy équivalente à une machine de Moore}
+        \begin{center}
+        Une machine de Moore à gauche et à droite la machine de Mealy correspondante
+        \begin{tikzpicture}[auto, node distance=2cm]
+            \node (q0) [state with output, initial, initial text= ] {$q_0$ \nodepart{lower} $a$};
+            \node (q1) [state with output, accepting, below right=of q0] {$q_1$ \nodepart{lower} $b$};
+            \node (q2) [state with output, above right=of q1] {$q_2$ \nodepart{lower} $a$};
+
+            \node (q00) [state, initial, initial text=, right=of q2] {$q_0$};
+            \node (q10) [state, accepting, below right=of q00] {$q_1$};
+            \node (q20) [state, above right=of q10] {$q_2$};
+
+            \path[-stealth, thick]
+            (q0) edge [loop above] node {$0$} (q0)
+            (q0) edge [bend left] node {$1$} (q1)
+            (q1) edge node {$0$} (q2)
+            (q2) edge [bend right] node {$1$} (q0)
+            (q2) edge [loop above] node {$0$} (q2)
+            (q1) edge [bend left] node {$1$} (q0)
+            (q00) edge [loop above] node {$0 \mid a$} (q00)
+            (q00) edge [bend left] node {$1 \mid b$} (q10)
+            (q10) edge node {$0 \mid a$} (q20)
+            (q20) edge [bend right] node {$1 \mid a$} (q00)
+            (q20) edge [loop above] node {$0 \mid a$} (q20)
+            (q10) edge [bend left] node {$1 \mid a$} (q00);
+        \end{tikzpicture}
+        \end{center}
+    \end{figure}
+
+    \vspace*{1cm}
+    On montre maintenant le sens direct. Soit $\mathcal{M}_1 = (\Sigma, \Gamma, Q, q_0, F, \delta, \lambda)$ une machine de Mealy.
+    On suppose quitte à rajouter un état que l'état initial est inacessible depuis n'importe quel autre état. On pose la machine de Moore
+    $\mathcal{M} = (\Sigma, \Gamma, (Q \backslash q_0) \times \Gamma \cup \{q_0\}, F \times \Gamma, \delta', \lambda')$ où
+    $\lambda'$ et $\delta'$ sont définis comme suit
+    \begin{equation*}
+        \begin{split}
+            &\forall a \in \Sigma, \delta'(q_0, a) = \delta(q_0, a)\\
+            &\forall q \in Q \backslash q_0, \forall b \in \Gamma, \forall a \in \Sigma, \delta'(q, b, a) = (\delta(q, a), \lambda(q, a))\\
+            &\forall q \in Q \backslash q_0, \forall b \in \Gamma, \lambda'(q, b) = b
+        \end{split}
+    \end{equation*}
+    Notons d'abord que $w \in \Sigma^*$ est reconnu par l'automate d'entrée de $\mathcal{M}_1$, si et seulement si il l'est par l'automate d'entrée de 
+    $\mathcal{M}$ : en effet, un calcul $q_0, ..., q_n$ dans le premier automate correspond à un calcul $q_0, (q_1, b_1), ..., (q_n, b_n)$
+    dans le second automate avec $b_1, ..., b_n \in \Gamma$ et réciproquement. Soit $L$ le langage reconnu par les deux automates d'entrées,
+    $f$ la fonction implémentée par $\mathcal{M}_1$ et $F$ celle implémentée par $\mathcal{M}$. Pour $w \in L$, $w = w_1 ... w_n$
+    et produisant le calcul $q_0, (q_1, b_1), ..., (q_n, b_n)$ dans $\mathcal{M}$
+    \begin{align*}
+        F(w) &= q_0 \star w\\
+        &= \lambda'(q_1, b_1) ... \lambda'(q_n, b_n)\\
+        &= b_1 ... b_n\\
+        &= \lambda(q_0, w_1) ... \lambda(q_{n-1}, w_n)\\
+        &= f(w)
+    \end{align*}
+    Donc les deux transducteurs sont bien équivalents
+
+    %Mettre dessin
+\end{proof}
+
 \subsection{Propriétés algébriques}
+
+\begin{define}[Demi-groupe]
+    Soit $G$ un ensemble muni d'une loi de composition interne $\cdot$. Si $\cdot$ est associative, on appelle $G$ un demi-groupe.
+\end{define}
+
+\begin{define}[Taux de croissance]
+    Si $(G, \cdot)$ est un demi-groupe et $A \subset G$ un ensemble fini de générateurs, on peut définir son taux de croissance
+    $\gamma : \mathbb{N} \backslash \{0, 1\} \rightarrow \mathbb{N}$ de la façon suivante : pour $n \geq 2$, $\gamma(n)$ est le nombre d'élements
+    de $G$ étant produits de $n$ générateurs mais n'étant pas soi même un générateur. En d'autres termes
+    \[ \gamma(n) = |\{ g_1 ... g_n \mid g_1, ..., g_n \in A \} \backslash A| \]
+\end{define}
+
+Si $\Sigma$ est un alphabet fini, $\Sigma^*$ est un monoïde donc un demi-groupe. Son taux de croissance est exponentiel : en effet
+on a ici $\gamma(n) = |\Sigma|^n$, $n \geq 2$ car tout mot de longueur au moins 2 n'est pas une lettre. Si l'on ajoute à $\Sigma$
+les lettres $a^{-1}$ pour tout $a \in \Sigma$ et que l'on quotiente $\Sigma^*$ par la relation d'équivalence rendant équivalent les produits $aa^{-1}$,
+$a^{-1}a$ et $\varepsilon$ pour tout $a \in \Sigma$, on obtient alors un groupe non commutatif. Son taux de croissance est également exponentiel :
+on compte tout les mots possibles de $2$ à $n$ lettres tels que chaque lettre ne peut être suivie de son inverse, donc
+\begin{align*}
+    \gamma(n) &= \sum_{k=2}^n (2|\Sigma|)(2|\Sigma|-1)^{k-1}\\
+    &\sim 2|\Sigma|(2|\Sigma|-1)^n
+\end{align*}
+\\~\\
+Le demi-groupe libre $\mathbb{N}^k \backslash 0$ ayant pour générateurs la base canonique a un taux de croissance polynômial : on a pour $n \geq 2$
+\begin{align*}
+    \gamma(n) &= |\{g_1 + ... + g_n \mid g_1, ..., g_n \in \{ e_1, ..., e_k \} \}|\\
+    &= \left| \left\{ (m_1, ..., m_k) \in \mathbb{N} \mid \sum_{i=1}^k m_i = n 
+    \right\} \right|\\
+    &\leq n^k
+\end{align*}
+\\~\\
+On se demande alors si il existe des demi-groupes tels que leur taux de croissance soit compris strictement entre polynômial et exponentiel, et si
+les groupes, plus stricts que les demi-groupes, peuvent également réaliser ces conditions.
+Les machines de Mealy permettent de répondre à ces deux questions
+\\~\\
+On se fixe une machine de Mealy $\mathcal{M} = (\{0, 1\}, \{0, 1\}, Q, \delta, \lambda)$ (on ignore ici les états finaux et initiaux)
+pour la suite de cette section. Pour tout $q \in Q$, on définit
+\[ \rho_q : \begin{array}{cl}
+    \{0, 1\}^* &\longrightarrow \{0, 1\}^*\\
+    w &\longmapsto q \star w 
+\end{array} \]
+On notera $G_{\mathcal{M}}$ le demi-groupe engendré par les $(\rho_q)_{q \in Q}$ avec l'opération de composition. La machine de Mealy figure
+\ref{croisInt},
+engendre un groupe $G_{\mathcal{M}}$ ayant un taux de croissance intermédiaire, entre polynômial et exponentiel, qui est le suivant \cite{intGrowth}
+\[ \gamma(n) \sim 2^{5/2}3^{3/4}\pi^{-2}n^{1/4}\exp(\pi\sqrt{n/6}) \]
+
+\begin{figure}[h]
+    \caption{Une machine de Mealy produisant un demi-groupe à croissance intermédiaire}\label{croisInt}
+    \begin{center}
+        \begin{tikzpicture}[auto, node distance=2cm]
+            \node (a) [state] {$a$};
+            \node (b) [state, right=of a] {$b$};
+
+            \path[-stealth, thick]
+            (a) edge[loop above] node {$0 \mid 1$} (a)
+            (a) edge node {$1 \mid 1$} (b)
+            (b) edge[loop above] node {$0 \mid 1$} (b)
+            (b) edge[loop below] node {$1 \mid 0$} (b);
+        \end{tikzpicture}
+    \end{center}
+\end{figure}
+
+Un autre exemple est l'automate de la figure \ref{grigorchuk} \cite{grigor1}, dont le demi-groupe engendré est en fait un groupe
+(de Grigorchuk), et ayant lui aussi un taux de croissance intermédiaire \cite{grigor2}. 
+
+\begin{figure}[h]
+    \caption{L'automate de Mealy engendrant le groupe de Grigorchuk}\label{grigorchuk}
+    \begin{center}
+        \begin{tikzpicture}[auto, node distance=2cm]
+            \node (a) [state] {$a$};
+            \node (c) [state, above right=of a] {$c$};
+            \node (b) [state, above left=of c] {$b$};
+            \node (d) [state, above right= of c] {$d$};
+            \node (e) [state, below right=of c] {$e$};
+
+            \path[-stealth, thick]
+            (a) edge node {$\substack{0 \mid 1 \\ 1 \mid 0}$} (e)
+            (b) edge node {$0 \mid 0$} (a)
+            (b) edge node {$1 \mid 1$} (c)
+            (c) edge node {$0 \mid 0$} (a)
+            (c) edge node {$1 \mid 1$} (d)
+            (d) edge node {$1 \mid 1$} (b)
+            (d) edge node {$0 \mid 0$} (e)
+            (e) edge[loop right] node {$\substack{0 \mid 1 \\ 1 \mid 0}$} (e);
+        \end{tikzpicture}
+    \end{center}
+\end{figure}
+
+\bibliographystyle{plain}
+\bibliography{Rapport}
 
 \end{flushleft}
 \end{document}
