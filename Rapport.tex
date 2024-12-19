@@ -86,6 +86,13 @@ langages reconnus par les automates.
     \end{center}
 \end{figure}
 
+\begin{prop}[Généralisation]
+    On peut s'autoriser des fonctions de transition $Q \times \Sigma^* \times \Gamma^* \longrightarrow P(Q)$ tant qu'il n'y a qu'un nombre fini de triplets $(q, w, v) \in Q \times \Sigma^* \times \Gamma^*$ tels que $\delta(q, v, w) \neq \emptyset$. En effet,
+ajouter cette transition correspond à ajouter les états $q=q_0, q_1, \dots q_{\mid w \mid} = q'_0, q'_1, \dots, q'_{\mid v \mid-1}$
+avec les transitions $\delta(q_i, w_i, \varepsilon )= \{q_{i+1}\}$, les $\delta(q'_i, \varepsilon, v_i) =\{q'_{i+1}\}$, et enfin
+$\delta(q_{\mid v \mid -1}, \varepsilon, v_{-1}) = \delta(q, w, v)$.
+\end{prop}
+
 \vspace*{2cm}
 
 \subsection{Relations rationnelles}
@@ -116,7 +123,7 @@ et les relations rationelles.
 \subsection{Propriétés des relations rationnelles et transducteurs finis}
 
 De manière analogue au cas des automates finis et des langages rationnels, on dispose du théorème suivant reliant
-les transducteurs finis aux relations rationelles
+les transducteurs finis aux relations rationelles :
 
 \begin{theorem}
     Une relation $R$ est rationelle si et seulement si elle est reconnue par un transducteur fini $T$
@@ -143,7 +150,7 @@ rationnelles.
 \end{proof}
 
 \begin{prop} \label{imageRat}
-    Soit $L \subset \Sigma^*$ rationnel. L'image par $R$ une relation rationnelle de $L$ est également régulière
+    Soit $L \subset \Sigma^*$ rationnel. L'image par $R$ une relation rationnelle de $L$ est également régulière.
 \end{prop}
 
 \begin{proof}
@@ -155,7 +162,7 @@ rationnelles.
     ayant pour états finaux les produits des états finaux, ce dernier reconait la relation
     \[ R' = \{ (u, v) \in R \mid u \in L \} \]
     En considérant la projection à droite, on obtient alors le langage $R(L) = \{ v \in \Gamma^* \mid \exists u \in L, (u, v) \in R \}$
-    qui est bien l'image de $L$ par $R$. Donc par la proposition \ref{stabRat}, $R(L)$ est rationel
+    qui est bien l'image de $L$ par $R$. Donc par la proposition \ref{stabRat}, $R(L)$ est rationel.
 \end{proof}
 
 \begin{prop}[Composition]
@@ -211,7 +218,7 @@ $\operatorname*{Pref}(L)$
 \end{figure}
 
 Notons toutefois que certaines propriétés de stabilité des automates finis ne se transmettent pas aux relations rationelles : c'est le cas par exemple
-de l'intersection et du complémentaire. On se place sur les alphabets $\Sigma = \{a\}$ et $\Gamma = \{a, b\}$. On se donne les relations rationelles suivantes
+de l'intersection et du complémentaire. On se place sur les alphabets $\Sigma = \{a\}$ et $\Gamma = \{a, b\}$. On se donne les relations rationelles suivantes :
 \begin{equation*}
     \begin{split}
         R_{l} &= \{ (a^n, w) \mid w \in \Gamma^*, n \in \mathbb{N}, |w| = 2n \}\\
@@ -263,13 +270,54 @@ $(R_1^C \cup R_2^C)^C  = R_1 \cap R_2$ serait rationnelle puisque l'union l'est 
 \subsection{Quelques problèmes associés aux transducteurs finis}
 
 Une question naturelle que l'on peut se poser est celle de déterminer si deux transducteur $T_1$ et $T_2$ implémentent la même relation rationelle.
-De manière assez surprenante, étant donnés les résultats connus pour les automates finis, ce problème est, dans le cas général, indécidable \cite{indecEqu} (une
-preuve utilise le problème de correspondance de Post).
-\\~\\
-On peut également se poser la question du caractère fonctionnel d'un transducteur : étant donné un transducteur fini $T$, est il possible de déterminer
+De manière assez surprenante, étant donnés les résultats connus pour les automates finis, ce problème est, dans le cas général, indécidable \cite{indecEqu} :
+
+\begin{theorem}
+    Le problème de l'équivalence de deux transducteurs est indécidable.
+\end{theorem}
+
+\begin{proof}
+    Cette preuve réduit le problème d'équivalence de Post vers l'équivalence de deux transducteurs.\\
+    On rappelle l'énoncé du problème d'équivalence de Post, indécidable :
+    \begin{define}[Problème d'équivalence de Post]
+    Étant donné deux listes finies de mots dans $\Gamma^*\backslash \{\varepsilon\}$ $\alpha_1, \dots, \alpha_n , \beta_1, \dots, \beta_n$, existe-t-il une suite $(i_k)_{1\leq k \leq N}$ telle que $\alpha_{i_1} \alpha_{i_2} \dots \alpha_{i_N} = \beta_{i_1} \beta_{i_2} \dots \beta_{i_N}$ ?
+    \end{define}
+    En posant $g(x_i)=\alpha_i$ et similairement $h(x_i)=\beta_i$ sur un alphabet $\Sigma=\{x_1, \dots, x_n\}$ et $h(ab) = h(a)h(b)$,
+    le problème devient : existe-t-il un mot $w\in \Sigma^*\backslash \{\varepsilon \}$ tel que $g(w) = h(w)$ ?\\
+    On construit le transducteur de la figure \ref{autoG-h} qui à un mot $x$ associe $\Gamma^* \backslash \{h(x)\}$.\\
+    Ici, l'état marqué $-$ reçoit les mots qui ont moins de lettre que $h(x)$, $+$ ceux qui ont plus de lettres que $h(x)$, et $\neq$
+    ceux qui ont au moins un caractère différent.\\
+    Similairement, on construit le transducteur qui à $x$ associe tous les mots sauf $g(x)$. Enfin, par la propriété \ref{stabRat}, on
+    peut construire l'automate qui reconnaît l'union. L'union de ces deux ensembles est d'ailleurs $\Sigma^* \times \Gamma^*$ sauf 
+    s'il existe un $x$ tel que $f(x) = g(x)$ : l'équivalence de ce transducteur avec le transducteur reconnaissant tout $\Sigma^* \times
+    \Gamma^*$ permet donc de conclure.
+
+\begin{figure}[h] 
+    \caption{Le transducteur qui à un mot $x$ associe $\Gamma^* \backslash \{h(x)\}$} \label{autoG-h}
+    \begin{center}
+    \begin{tikzpicture}[auto]
+        \node (q0) [state, initial, initial text= ] {$q_0$};
+        \node (q1) [state, accepting, above= of q0] {$-$};
+        \node (q2) [state, accepting, right= of q0] {$\neq$};
+        \node (q3) [state, accepting, below= of q0] {$+$};
+
+        \path[-stealth, thick]
+        (q0) edge [loop left] node {$l \mid h(l)$} (q0)
+        (q0) edge node {$\Sigma \mid \varepsilon$} (q1)
+        (q1) edge [loop above] node {$\Sigma \mid \Gamma_\varepsilon$} (q1)
+        (q0) edge node {$\substack{l \mid v \\ \mid v \mid = \mid h(l) \mid \\ v \neq h(l)}$} (q2)
+        (q2) edge [loop right] node {$\Sigma_\varepsilon \mid \Gamma_\varepsilon$} (q2)
+        (q0) edge node {$\varepsilon \mid \Gamma$} (q3)
+        (q3) edge [loop below] node {$\Sigma_\varepsilon \mid \Gamma$} (q3);
+    \end{tikzpicture}
+    \end{center}
+\end{figure}
+\end{proof}
+
+On peut également se poser la question du caractère fonctionnel d'un transducteur : étant donné un transducteur fini $T$, est-il possible de déterminer
 si ce dernier est fonctionnel ou non, c'est à dire que la relation qu'il implémente est en réalité une fonction ? Ce problème est décidable
 \cite{sakarovitch} et l'est même en temps polynômial en la taille de $T$ : la preuve utilise des notions algébriques sur les monoïdes pour
-aboutir à une caractérisation de la fonctionnalité de $T$
+aboutir à une caractérisation de la fonctionnalité de $T$.
 
 \section{Machines de Moore}
 
