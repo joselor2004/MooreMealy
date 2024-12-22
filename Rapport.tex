@@ -316,28 +316,33 @@ On peut également se poser la question du caractère fonctionnel d'un transduct
 si ce dernier est fonctionnel ou non, c'est à dire que la relation qu'il implémente est en réalité une fonction ? Ce problème est décidable
 \cite{sakarovitch}  :
 \begin{theorem}
-    On peut déterminer si un automate est fonctionnel en testant toutes les images possibles à moins de $O(d^2)$ transitions.
+    On peut déterminer si un transducteur est fonctionnel en testant toutes les images possibles à moins de $O(d^2)$ transitions,
+    où $d = |Q|$
 \end{theorem}
 
 \begin{proof}
     En fait, on va montrer qu'il suffit de tester tous le mots avec moins de $2d^2+1$ transitions (cette borne peut être améliorée
-    mais reste en $O(d^2)$).\\
+    mais reste en $O(d^2)$).
+    \\~\\
     Soit un mot de taille minimale ayant au moins deux images. On considère deux chemins minimaux qui reconnaissent
     chacune de ces images, et les paires d'états par lesquels chaque chemin passe quand on les parcourt en même temps.\\
     Si on a strictement plus de $2d^2+1$ transitions, une paire d'états $(q,q')$ est visitée deux fois. On s'intéresse à la première paire
     d'états visitée une deuxième fois : on décompose ainsi les chemins en trois, où la première partie permet d'arriver à $(q, q')$
     depuis la paire d'états initiaux, la deuxième de boucler sur $(q,q')$ et la dernière de $(q,q')$ vers un couple d'états finaux, et ce
     avec $d^2+1$ transitions au plus sur les deux premiers chemins. Puisqu'il en reste au moins $d^2+1$, un état est à nouveau
-    visité deux fois, et on peut aussi décomposer le dernier chemin en trois : le chemin total est divisé en cinq, avec deux boucles.\\
-    Les images sont elles aussi décomposées en $vwxyz$ et $v'w'x'y'z'$. On veut maintenant montrer qu'on peut supprimer une
+    visité deux fois, et on peut aussi décomposer le dernier chemin en trois : le chemin total est divisé en cinq, avec deux boucles.
+    Les images sont elles aussi décomposées en $vwxyz$ et $v'w'x'y'z'$.
+    \\~\\
+    On veut maintenant montrer qu'on peut supprimer une
     boucle, ou les deux, pour se ramener à de plus petits chemins avec deux images différentes. Supposons à l'inverse que
-    $vxz=v'x'z'$, $vwxz=v'w'x'z'$, et $vxyz=v'x'y'z'$. On en déduit immédiatement $\mid y \mid= \mid y' \mid$ et $\mid w\mid=\mid w'\mid$,
-    d'où $\mid vwxyz\mid = \mid v'w'x'y'z' \mid$. Spdg, on suppose $vwx$ moins long que $v'w'x'$. On sait alors que l'égalité
+    $vxz=v'x'z'$, $vwxz=v'w'x'z'$, et $vxyz=v'x'y'z'$. On en déduit immédiatement $| y |= | y' |$ et $| w |=| w'|$,
+    d'où $| vwxyz| = | v'w'x'y'z' |$. Spdg, on suppose $vwx$ moins long que $v'w'x'$. On sait alors que l'égalité
     $vwxyz=v'w'x'y'z'$ est vérifiée au moins jusqu'à la fin de $x$ vers la droite et jusqu'au début de $x'$ vers la gauche : un éventuel
     conflit viendrait donc d'un recouvrement de longueur $l$ entre la fin de $w'$ et le début de $y$. De $vwxz=v'w'x'z'$ on déduit
     que les $l$ dernières lettres de $w'$ sont les $l$ premières de $z$. De $vxz=v'x'z'$ on sait qu'il s'agit des $l$ dernières lettres de
-    $v'$, et de $vxyz=v'x'y'z'$ qu'il s'agit bien des $l$ premières lettres de $y$. On a donc $vwxyz=v'w'x'y'z'$, impossible.\\
-    Donc, s'il existe un mot ayant deux images, on peut en trouver un en testant uniquement les $d^2+1$ premières transitions.
+    $v'$, et de $vxyz=v'x'y'z'$ qu'il s'agit bien des $l$ premières lettres de $y$. On a donc $vwxyz=v'w'x'y'z'$, impossible.
+    \\~\\
+    Donc, s'il existe un mot ayant deux images, on peut en trouver un en testant uniquement les $2d^2+1$ premières transitions.
 
 \end{proof}
 
@@ -421,8 +426,6 @@ Du point de vue du formalisme, elles sont définies de la même manière qu'un a
 $\lambda$ qui est cette fois $\lambda : Q \times \Sigma \rightarrow \Gamma$. La fonction rationelle réalisée par une machine de Mealy
 est définie de manière très similaire à celle pour les machines de Moore (il suffit juste de tenir comptre de la lettre de $\Sigma$ lue à chaque
 étape du calcul)
-
-%Tu peux faire une jolie machine de Mealy ici stv en exemple
 
 \subsection{Equivalence avec Moore}
 
@@ -521,7 +524,7 @@ $a^{-1}a$ et $\varepsilon$ pour tout $a \in \Sigma$, on obtient alors un groupe 
 on compte tout les mots possibles de $2$ à $n$ lettres tels que chaque lettre ne peut être suivie de son inverse, donc
 \begin{align*}
     \gamma(n) &= \sum_{k=2}^n (2|\Sigma|)(2|\Sigma|-1)^{k-1}\\
-    &\sim 2|\Sigma|(2|\Sigma|-1)^n
+    &\sim \frac{|\Sigma|}{|\Sigma|-1}(2|\Sigma|-1)^n
 \end{align*}
 \\~\\
 Le demi-groupe libre $\mathbb{N}^k \backslash 0$ ayant pour générateurs la base canonique a un taux de croissance polynômial : on a pour $n \geq 2$
