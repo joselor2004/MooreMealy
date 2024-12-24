@@ -14,6 +14,8 @@
 
 \title{Rapport : Transducteurs et machines de Moore et Mealy}
 
+\author{José et Aimeric}
+
 \begin{document}
 
 \maketitle
@@ -183,9 +185,22 @@ rationnelles.
     du couple de sortie au moment de la transition étiquetée en sortie par cette lettre.
     \\~\\
     Ce transducteur implémente donc la relation binaire $[T]$ qui contient $((u, v), w)$ si et seulement si $(u, v)$ est dans la première relation,
-    et $(v, w)$ dans la deuxième. De la même manière que dans la proposition \ref{imageRat}, on peut en intersectant $[T]$
-    avec $(\Sigma^* \times \{\varepsilon\}) \times \Lambda^*$ obtenir la relation de $\Sigma^* \times \Lambda^*$
-    en identifiant $\Sigma^* \times \{\varepsilon\}$ à $\Sigma^*$ (rationelle par la construction de la proposition précedente) $[T_1] \circ [T_2]$.
+    et $(v, w)$ dans la deuxième. On construit à partir de $T$ le transducteur $T' = (\Sigma, \Lambda, Q', I', F', \delta')$ où
+    \begin{itemize}
+        \item $Q' = Q_1 \times Q_2 \times \Gamma_{\varepsilon}$
+        \item $I' = I_1 \times I_2 \times \Gamma_{\varepsilon}$
+        \item $F' = F_1 \times F_2 \times \Gamma_{\varepsilon}$
+    \end{itemize}
+    et enfin
+    \[
+            \forall (q, c) \in (Q_1 \times Q_2) \times \Gamma_{\varepsilon}, \forall (a, b) \in \Sigma_{\varepsilon} \times \Gamma \cup \Sigma \times \Gamma_{\varepsilon},
+            \forall p \in \delta_3(q, a, b), (p, b) \in \delta'(q, a)
+    \]
+    $T'$ implémente alors $[T_1] \circ [T_2]$ : en effet on a $(u, v) \in [T']$ si et seulement si il existe un calcul acceptant sur
+    $(u, v)$ dans $T'$. Or par construction de $T'$, un calcul acceptant dans $T'$ correspond à un calcul acceptant dans $T$, où le
+    deuxième élement du couple d'entrée peut être lu sur les états empruntés dans $T'$. Par cette correspondance, on a alors
+    $(u, v) \in [T']$ si et seulement si il existe $w \in \Gamma^*$ tel que $((u, w), v) \in [T]$, soit que $(u, w) \in [T_1]$
+    et $(w, v) \in [T_2]$, donc $[T'] = [T_1] \circ [T_2]$
 \end{proof}
 
 Un exemple d'application de ces propriétés de stabilité est une preuve rapide de la rationnalité de $\operatorname*{Pref}(L)$, l'ensemble des préfixes
@@ -342,7 +357,7 @@ si ce dernier est fonctionnel ou non, c'est à dire que la relation qu'il implé
     que les $l$ dernières lettres de $w'$ sont les $l$ premières de $z$. De $vxz=v'x'z'$ on sait qu'il s'agit des $l$ dernières lettres de
     $v'$, et de $vxyz=v'x'y'z'$ qu'il s'agit bien des $l$ premières lettres de $y$. On a donc $vwxyz=v'w'x'y'z'$, impossible.
     \\~\\
-    Donc, s'il existe un mot ayant deux images, on peut en trouver un en testant uniquement les $2d^2+1$ premières transitions.
+    Donc, s'il existe un mot ayant deux images, on peut en trouver un en testant uniquement les $2git d^2+1$ premières transitions.
 
 \end{proof}
 
