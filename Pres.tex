@@ -124,10 +124,9 @@
 
     \begin{proof}
         Pour le premier, on inverse les étiquettes du transducteur reconaissant la relation. Pour le deuxième, on
-        "oublie" soit les étiquettes d'entrée soit de sortie.
+        "oublie" les étiquettes de sortie pour en faire un automate.
     \end{proof}
 
-    Peut être une figure pour illustrer ?
 \end{frame}
 
 \begin{frame}{Quelques propriétés de stabilité}
@@ -138,8 +137,80 @@
         La composition de relations rationelles est rationelle
     \end{proposition}
 
-    Là honnêtement faut voir si on présente les preuves ou pas en fonction du temps que ça prend
+    \begin{proof}
+        On peut prouver la première propriété à partir de la deuxième, en considérant l'image de la composition de
+        $\{\varepsilon \} \times \mathcal{L}$ et $R$.
+    \end{proof}
 \end{frame}
+
+\begin{frame}{Composition de deux relations}
+\begin{figure}[h]
+    \caption{Premier transducteur}
+    \begin{center}
+    \begin{tikzpicture}[auto]
+        \node (q0) [state, initial, initial text= ] {$q_0$};
+        \node (q1) [state, right=of q0] {$q_1$};
+        \node (q2) [state, accepting, right=of q1] {$q_2$};
+
+        \path[-stealth, thick]
+        (q0) edge [loop above] node {$a \mid \varepsilon$} (q0)
+        (q0) edge node {$a \mid b$} (q1)
+        (q1) edge node {$b \mid \varepsilon$} (q2);
+
+    \end{tikzpicture}
+
+    \end{center}
+\end{figure}
+
+\begin{figure}[h]
+    \caption{Deuxième transducteur}
+    \begin{center}
+    \begin{tikzpicture}[auto]
+        \node (q0b) [state, initial, initial text= ] {$q_0'$};
+        \node (q1b) [state, accepting, below=of q0] {$q_1$'};
+
+        \path[-stealth, thick]
+        (q0b) edge [bend left] node {$b \mid a$} (q1b)
+        (q1b) edge [bend left] node {$\varepsilon \mid b$} (q0b);
+
+    \end{tikzpicture}
+
+    \end{center}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Composition de deux relations}
+\begin{figure}[h]
+    \caption{Le transducteur composition des deux relations} \label{prodRel}
+    \begin{center}
+    \begin{tikzpicture}[auto]
+        \node (q0q0) [state, initial, initial text= ] {$q_0, q_0'$};
+        \node (q1q0) [state, right=of q0q0] {$q_1, q_0'$};
+        \node (q2q0) [state, right=of q1q0] {$q_2, q_0'$};
+
+        \node (q0q1) [state, below=of q0q0] {$q_0, q_1'$};
+        \node (q1q1) [state, right=of q0q1] {$q_1, q_1'$};
+        \node (q2q1) [state, accepting, right=of q1q1] {$q_2, q_1'$};
+
+        \path[-stealth, thick]
+        (q0q0) edge [loop above] node {$a \mid \varepsilon$} (q0q0)
+        (q0q1) edge [loop below] node {$a \mid \varepsilon$} (q0q1)
+        (q0q0) edge node [swap] {$a \mid a$} (q1q1)
+        (q1q0) edge node {$b \mid \varepsilon$} (q2q0)
+        (q1q1) edge node {$b \mid \varepsilon$} (q2q1)
+        (q0q1) edge node {$\varepsilon \mid b$} (q0q0)
+        (q1q1) edge node {$\varepsilon \mid b$} (q1q0)
+        (q2q1) edge node {$\varepsilon \mid b$} (q2q0);
+
+
+    \end{tikzpicture}
+
+    \end{center}
+\end{figure}
+\end{frame}
+
 
 \begin{frame}{Une application}
     Si $L$ est un langage rationnel, alors $\operatorname*{Pref}(L)$ l'est également. On retrouve
@@ -181,19 +252,45 @@
         Le problème d'équivalence entre deux transducteurs finis est indécidable
     \end{thm}
     \begin{proof}
-        L'idée est de faire une réduction à Post : on construit un transducteur dont l'équivalence
-        avec la relation $\Sigma^* \times \Gamma^*$ équivaut à l'existence d'une solution de Post.
+        On peut reformuler Post ainsi : étant donné deux morphismes $g, h: \Sigma^* \rightarrow \Gamma^*$, existe-t-il
+        un mot $w \in \Sigma^* \neq \varepsilon$ tel que $g(w)=h(w)$ ?\\
+        On peut ensuite construire le transducteur qui implémente la relation $(x, (\Gamma^*\backslash \{g(x)\})\cup 
+        (\Gamma^* \backslash \{h(x)\}))$, qui implémente la relation $\Sigma^*\times \Gamma^*$ si et seulement si il n'y
+        a pas de solution.
+        
     \end{proof}
-    Tu vois si tu détaille plus
+\end{frame}
+
+\begin{frame}{Construction du transducteur.}
+    \begin{figure}[h] 
+        \caption{Le transducteur qui à un mot $x$ associe $\Gamma^* \backslash \{h(x)\}$} \label{autoG-h}
+        \begin{center}
+        \begin{tikzpicture}[auto, node distance = 1.4cm]
+            \node (q0) [state, initial, initial text= ] {$q_0$};
+            \node (q1) [state, accepting, above= of q0] {$-$};
+            \node (q2) [state, accepting, right= of q0] {$\neq$};
+            \node (q3) [state, accepting, below= of q0] {$+$};
+    
+            \path[-stealth, thick]
+            (q0) edge [loop left] node {$l \mid h(l)$} (q0)
+            (q0) edge node {$\Sigma \mid \varepsilon$} (q1)
+            (q1) edge [loop above] node {$\Sigma \mid \Gamma_\varepsilon$} (q1)
+            (q0) edge node {$\substack{l \mid v \\ \mid v \mid = \mid h(l) \mid \\ v \neq h(l)}$} (q2)
+            (q2) edge [loop right] node {$\Sigma_\varepsilon \mid \Gamma_\varepsilon$} (q2)
+            (q0) edge node {$\varepsilon \mid \Gamma$} (q3)
+            (q3) edge [loop below] node {$\Sigma_\varepsilon \mid \Gamma$} (q3);
+        \end{tikzpicture}
+        \end{center}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Décider de la fonctionnalité}
     \begin{thm}
-        On peut décider si un transducteur implémente une fonction (chaque élement n'a qu'une image) en temps $O(n^2)$ où
-        $n$ est le nombre d'états du transducteur
+        Le problème de savoir si un transducteur implémente une fonction (chaque élement n'a qu'une image) est décidable.
     \end{thm}
     \begin{proof}
-        De la big combinatoire hein
+        Il suffit de tester toutes les images à moins de $O(n^2)$ transitions : s'il existe un mot avec deux images différentes,
+        on peut montrer qu'il existe un couple d'images différentes à moins de $O(n^2)$ transitions.
     \end{proof}
 \end{frame}
 
