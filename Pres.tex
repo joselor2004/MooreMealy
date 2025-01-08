@@ -3,6 +3,7 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{graphicx}
 \usepackage{algorithm2e}
 \usepackage{hyperref}
 \usepackage[french]{babel}
@@ -354,56 +355,126 @@
 
 \subsection{Machines de Mealy}
 
-\begin{frame}{Définitions}
-    \begin{definition}
-        Une machine de Mealy est un transducteur déterministe sans $\varepsilon$ transition. Il s'agit de la même
-        définition que pour les machines de Moore mais où $\lambda : Q \times \Sigma \rightarrow \Gamma$
-    \end{definition}
-\end{frame}
-
-\begin{frame}{Exemple}
+\begin{frame}{Définition}  
     \begin{figure}[h]
-        \caption{Un exemple de machine de Mealy réalisant le ou exclusif de deux entiers}
-            \begin{center}
-            \begin{tikzpicture}[auto, node distance = 2cm]
-                \node (q0) [state, initial, initial text= ] {$q_0$};
-                \node (q1) [state, above right= of q0] {$q_1$};
-                \node (q2) [state, below right= of q0] {$q_2$};
-
+        \caption{Une machine de Mealy totalement innocente}
+        \begin{center}
+            \begin{tikzpicture}[auto, node distance=2cm]
+                \node (a) [state] {$a$};
+                \node (c) [state, above right=of a] {$c$};
+                \node (b) [state, above left=of c] {$b$};
+                \node (d) [state, above right= of c] {$d$};
+                \node (e) [state, below right=of c] {$e$};
     
-               \path[-stealth, thick]
-                (q0) edge node {$0 \mid 0$} (q1)
-                (q0) edge node {$1 \mid 0$} (q2)
-                (q1) edge [loop right] node {$0 \mid 0$} (q1)
-                (q2) edge [loop right] node {$1 \mid 0$} (q2)
-                (q1) edge [bend left] node {$1 \mid 1$} (q2)
-                (q2) edge [bend left] node {$0 \mid 1$} (q1);
+                \path[-stealth, thick]
+                (a) edge node [swap] {$\substack{0 \mid 1 \\ 1 \mid 0}$} (e)
+                (b) edge node {$0 \mid 0$} (a)
+                (b) edge node {$1 \mid 1$} (c)
+                (c) edge node {$0 \mid 0$} (a)
+                (c) edge node {$1 \mid 1$} (d)
+                (d) edge node {$1 \mid 1$} (b)
+                (d) edge node {$0 \mid 0$} (e)
+                (e) edge[loop right] node {$\substack{0 \mid 1 \\ 1 \mid 0}$} (e);
             \end{tikzpicture}
         \end{center}
     \end{figure}
+
 \end{frame}
 
 \subsection{Equivalence Moore/Mealy}
 
-\begin{frame}{Equivalence}
-    \begin{thm}
-        Pour toute machine de Mealy il existe une machine de Moore équivalente et réciproquement
-    \end{thm}
-    \begin{proof}
-        Pour le sens réciproque, il suffit d'ajouter en étiquette de sortie les étiquettes de l'état vers lequel la transition est faite.
-        Pour le sens direct : on clone chaque état $|\Gamma|$ fois (on se place sur $Q \times \Gamma$). Puis pour chaque transition $p \rightarrow q$ d'étiquette
-        de sortie $b$, on crée la transition $(p, c) \rightarrow (q, b)$ pour $c \in \Gamma$. De plus on pose $\lambda(q, c) = c$
-    \end{proof}
+\begin{frame}{Equivalence Moore/Mealy}
+    \begin{figure}[h]
+        \caption{Exemple de construction d'une machine de Mealy équivalente à une machine de Moore}
+        \begin{center}
+        Une machine de Moore à gauche et à droite la machine de Mealy correspondante.\\
+        \scalebox{0.7}{
+        \begin{tikzpicture}[auto, node distance=2cm]
+            \node (q0) [state with output, initial, initial text= ] {$q_0$ \nodepart{lower} $a$};
+            \node (q1) [state with output, accepting, below right=of q0] {$q_1$ \nodepart{lower} $b$};
+            \node (q2) [state with output, above right=of q1] {$q_2$ \nodepart{lower} $a$};
+
+            \node (q00) [state, initial, initial text=, right=of q2] {$q_0$};
+            \node (q10) [state, accepting, below right=of q00] {$q_1$};
+            \node (q20) [state, above right=of q10] {$q_2$};
+
+            \path[-stealth, thick]
+            (q0) edge [loop above] node {$0$} (q0)
+            (q0) edge [bend left] node {$1$} (q1)
+            (q1) edge node {$0$} (q2)
+            (q2) edge [bend right] node {$1$} (q0)
+            (q2) edge [loop above] node {$0$} (q2)
+            (q1) edge [bend left] node {$1$} (q0)
+            (q00) edge [loop above] node {$0 \mid a$} (q00)
+            (q00) edge [bend left] node {$1 \mid b$} (q10)
+            (q10) edge node {$0 \mid a$} (q20)
+            (q20) edge [bend right] node {$1 \mid a$} (q00)
+            (q20) edge [loop above] node {$0 \mid a$} (q20)
+            (q10) edge [bend left] node {$1 \mid a$} (q00);
+        \end{tikzpicture}
+        }
+        \end{center}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{de Mealy à Moore}
+    \begin{figure}[h]
+        \caption{Machine de Mealy}
+        \begin{center}
+        \scalebox{0.7}{
+        \begin{tikzpicture}[auto]
+            \node (q0) [state, initial, initial text= ] {$q_0$};
+            \node (q1) [state, right=of q0] {$q_1$};
+            \node (q2) [state, accepting, right=of q1] {$q_2$};
+    
+            \path[-stealth, thick]
+            (q0) edge [loop above] node {$a \mid a$} (q0)
+            (q0) edge node {$b \mid b$} (q1)
+            (q1) edge node {$b \mid a$} (q2)
+            (q1) edge [loop above] node {$a \mid a$} (q1);
+    
+        \end{tikzpicture}
+    }
+        \end{center}
+    \end{figure}
+
+    \begin{figure}[h]
+        \caption{Machine de Moore équivalente}
+        \begin{center}
+        \scalebox{0.7}{
+        \begin{tikzpicture}[auto]
+            \node (q0a) [state with output, initial, initial text= ] {$q_0$ \nodepart{lower} $a$};
+            \node (q1a) [state with output, right=of q0a] {$q_1$ \nodepart{lower} $a$};
+            \node (q2a) [state with output, accepting, right=of q1a] {$q_2$ \nodepart{lower} $a$};
+
+            \node (q0b) [state with output, below=of q0a ] {$q_0'$ \nodepart{lower} $b$};
+            \node (q1b) [state with output, right=of q0b] {$q_1'$ \nodepart{lower} $b$};
+            \node (q2b) [state with output, accepting, right=of q1b] {$q_2'$ \nodepart{lower} $b$};
+    
+            \path[-stealth, thick]
+            (q0a) edge [loop above] node {$a$} (q0a)
+            (q0b) edge node {$a$} (q0a)
+            (q0a) edge node {$b$} (q1b)
+            (q0b) edge node {$b$} (q1b)
+            (q1a) edge node {$b$} (q2a)
+            (q1b) edge node {$b$} (q2a)
+            (q1b) edge node {$a$} (q1a)
+            (q1a) edge [loop above] node {$a$} (q1a);
+    
+        \end{tikzpicture}
+}
+        \end{center}
+    \end{figure}
 \end{frame}
 
 \subsection{Propriétés algébriques}
 
-\begin{frame}{Semi-groupes}
-    \begin{definition}
+\begin{frame}{Définitions}
+    \begin{definition}[Demi-groupe]
         Soit $G$ un ensemble muni d'une loi de composition interne $\cdot$. Si $\cdot$ est associative, on appelle $G$ un demi-groupe.
     \end{definition}
-
-    \begin{definition}
+    
+    \begin{definition}[Taux de croissance]
         Si $(G, \cdot)$ est un demi-groupe et $A \subset G$ un ensemble fini de générateurs, on peut définir son taux de croissance
         $\gamma : \mathbb{N} \backslash \{0, 1\} \rightarrow \mathbb{N}$ de la façon suivante : pour $n \geq 2$, $\gamma(n)$ est le nombre d'élements
         de $G$ étant produits de $n$ générateurs mais n'étant pas soi même un générateur. En d'autres termes
@@ -411,10 +482,42 @@
     \end{definition}
 \end{frame}
 
-\begin{frame}{Exemples de taux de croissance}
-    Le semi groupe $\Sigma^*$ avec $\Sigma$ un alphabet fini a un taux de croissance exponentiel (le nombre de mots à $n$ lettres est exponentiel en $n$).
-    \\~\\
-    Le demi groupe libre $\mathbb{N}^k \backslash \{0\}$ a un taux de croissance polynômial lui
+\begin{frame}{Machines et demi-groupes}
+    \begin{definition}{Demi-groupe engendré par une machine de Mealy}
+    On se fixe une machine de Mealy $\mathcal{M} = (\{0, 1\}, \{0, 1\}, Q, \delta, \lambda)$ (on ignore ici les états finaux et initiaux)
+    pour la suite de cette section. Pour tout $q \in Q$, on définit
+    \[ \rho_q : \begin{array}{cl}
+        \{0, 1\}^* &\longrightarrow \{0, 1\}^*\\
+        w &\longmapsto q \star w 
+    \end{array} \]
+    On notera $G_{\mathcal{M}}$ le demi-groupe engendré par les $(\rho_q)_{q \in Q}$ avec l'opération de composition.
+\end{definition}
+\end{frame}
+
+\begin{frame}{Groupe à croissance intermédiaire}
+    
+    \begin{figure}[h]
+        \caption{L'automate de Mealy engendrant le groupe de Grigorchuk}\label{grigorchuk}
+        \begin{center}
+            \begin{tikzpicture}[auto, node distance=2cm]
+                \node (a) [state] {$a$};
+                \node (c) [state, above right=of a] {$c$};
+                \node (b) [state, above left=of c] {$b$};
+                \node (d) [state, above right= of c] {$d$};
+                \node (e) [state, below right=of c] {$e$};
+    
+                \path[-stealth, thick]
+                (a) edge node [swap] {$\substack{0 \mid 1 \\ 1 \mid 0}$} (e)
+                (b) edge node {$0 \mid 0$} (a)
+                (b) edge node {$1 \mid 1$} (c)
+                (c) edge node {$0 \mid 0$} (a)
+                (c) edge node {$1 \mid 1$} (d)
+                (d) edge node {$1 \mid 1$} (b)
+                (d) edge node {$0 \mid 0$} (e)
+                (e) edge[loop right] node {$\substack{0 \mid 1 \\ 1 \mid 0}$} (e);
+            \end{tikzpicture}
+        \end{center}
+    \end{figure}
 \end{frame}
 
 \section*{Fin}
