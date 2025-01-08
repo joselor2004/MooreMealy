@@ -354,9 +354,68 @@
 
 \subsection{Machines de Mealy}
 
+\begin{frame}{Définitions}
+    \begin{definition}
+        Une machine de Mealy est un transducteur déterministe sans $\varepsilon$ transition. Il s'agit de la même
+        définition que pour les machines de Moore mais où $\lambda : Q \times \Sigma \rightarrow \Gamma$
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Exemple}
+    \begin{figure}[h]
+        \caption{Un exemple de machine de Mealy réalisant le ou exclusif de deux entiers}
+            \begin{center}
+            \begin{tikzpicture}[auto, node distance = 2cm]
+                \node (q0) [state, initial, initial text= ] {$q_0$};
+                \node (q1) [state, above right= of q0] {$q_1$};
+                \node (q2) [state, below right= of q0] {$q_2$};
+
+    
+               \path[-stealth, thick]
+                (q0) edge node {$0 \mid 0$} (q1)
+                (q0) edge node {$1 \mid 0$} (q2)
+                (q1) edge [loop right] node {$0 \mid 0$} (q1)
+                (q2) edge [loop right] node {$1 \mid 0$} (q2)
+                (q1) edge [bend left] node {$1 \mid 1$} (q2)
+                (q2) edge [bend left] node {$0 \mid 1$} (q1);
+            \end{tikzpicture}
+        \end{center}
+    \end{figure}
+\end{frame}
+
 \subsection{Equivalence Moore/Mealy}
 
+\begin{frame}{Equivalence}
+    \begin{thm}
+        Pour toute machine de Mealy il existe une machine de Moore équivalente et réciproquement
+    \end{thm}
+    \begin{proof}
+        Pour le sens réciproque, il suffit d'ajouter en étiquette de sortie les étiquettes de l'état vers lequel la transition est faite.
+        Pour le sens direct : on clone chaque état $|\Gamma|$ fois (on se place sur $Q \times \Gamma$). Puis pour chaque transition $p \rightarrow q$ d'étiquette
+        de sortie $b$, on crée la transition $(p, c) \rightarrow (q, b)$ pour $c \in \Gamma$. De plus on pose $\lambda(q, c) = c$
+    \end{proof}
+\end{frame}
+
 \subsection{Propriétés algébriques}
+
+\begin{frame}{Semi-groupes}
+    \begin{definition}
+        Soit $G$ un ensemble muni d'une loi de composition interne $\cdot$. Si $\cdot$ est associative, on appelle $G$ un demi-groupe.
+    \end{definition}
+
+    \begin{definition}
+        Si $(G, \cdot)$ est un demi-groupe et $A \subset G$ un ensemble fini de générateurs, on peut définir son taux de croissance
+        $\gamma : \mathbb{N} \backslash \{0, 1\} \rightarrow \mathbb{N}$ de la façon suivante : pour $n \geq 2$, $\gamma(n)$ est le nombre d'élements
+        de $G$ étant produits de $n$ générateurs mais n'étant pas soi même un générateur. En d'autres termes
+        \[ \gamma(n) = |\{ g_1 ... g_n \mid g_1, ..., g_n \in A \} \backslash A| \]
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Exemples de taux de croissance}
+    Le semi groupe $\Sigma^*$ avec $\Sigma$ un alphabet fini a un taux de croissance exponentiel (le nombre de mots à $n$ lettres est exponentiel en $n$).
+    \\~\\
+    Le demi groupe libre $\mathbb{N}^k \backslash \{0\}$ a un taux de croissance polynômial lui
+\end{frame}
 
 \section*{Fin}
 
