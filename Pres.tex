@@ -355,6 +355,13 @@
 
 \subsection{Machines de Mealy}
 
+\begin{frame}{Définition}
+    \begin{definition}
+        Une machine de Mealy est un transducteur aux étiquettes d'entrée déterministes, sans $\varepsilon$ transition. Il
+        s'agit de la même définition formelle que les machines de Moore, mais où $\lambda : Q \times \Sigma \rightarrow \Gamma$
+    \end{definition}
+\end{frame}
+
 \begin{frame}{Définition}  
     \begin{figure}[h]
         \caption{Une machine de Mealy totalement innocente}
@@ -378,10 +385,22 @@
             \end{tikzpicture}
         \end{center}
     \end{figure}
-
 \end{frame}
 
 \subsection{Equivalence Moore/Mealy}
+
+\begin{frame}{Equivalence Moore/Mealy}
+    \begin{thm}
+        Pour toute machine de Mealy il existe une machine de Moore équivalente et réciproquement
+    \end{thm}
+
+    \begin{proof}
+        Pour le sens réciproque, il suffit de prendre le même automate en posant $\lambda'(q, a) = \lambda(\delta(q, a))$\\
+        Pour le sens direct, on se place sur les états $Q \times \Gamma$ et pour chaque transition $p \rightarrow q$
+        d'étiquette $a \mid b$, on ajoute aux transitions de la machine de Moore : $(p, c) \rightarrow (q, b)$ d'étiquette $a$ pour $c \in \Gamma$
+        et on pose $\lambda(q, b) = b$ 
+    \end{proof}
+\end{frame}
 
 \begin{frame}{Equivalence Moore/Mealy}
     \begin{figure}[h]
@@ -482,6 +501,13 @@
     \end{definition}
 \end{frame}
 
+\begin{frame}{Exemple de taux de croissance}
+    Le demi groupe $\Sigma^*$ a un taux de croissance exponentiel (on ne peut jamais simplifier l'écriture d'un élement de $\Sigma^*$).\\
+    Le groupe libre engendré par $\Sigma$ (on ajoute $a^{-1}$ pour $a \in \Sigma$) est également à taux de croissance exponentiel.
+    \\~\\
+    Le demi groupe libre $\mathbb{N}^k$ est à croissance polynômiale
+\end{frame}
+
 \begin{frame}{Machines et demi-groupes}
     \begin{definition}{Demi-groupe engendré par une machine de Mealy}
     On se fixe une machine de Mealy $\mathcal{M} = (\{0, 1\}, \{0, 1\}, Q, \delta, \lambda)$ (on ignore ici les états finaux et initiaux)
@@ -523,7 +549,7 @@
 \section*{Fin}
 
 \begin{frame}{Fin}
-    
+    C'est fini
 \end{frame}
 
 \end{document}
